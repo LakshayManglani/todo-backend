@@ -17,7 +17,7 @@ Check out the frontend repository for this project on Github: [Todo Reopsitory](
 
 ## Technologies Used
 
-- Express for for building APIs.
+- Express for building APIs.
 - CORS to allow multiple origins
 - Dotenv to hide sensitive information.
 - TypeScript for type safety.
