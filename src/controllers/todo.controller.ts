@@ -1,8 +1,7 @@
-import { Request, Response } from 'express';
+import createExpressHandler from '../util/expressHandler';
 
-// TODO: Create a util function which has types for req and res so that we can use it without giving type evertime.
-function getAllTodos(req: Request, res: Response) {
-  res.status(200).json({ message: 'From todo controller.' });
-}
+const getAllTodos = createExpressHandler((req, res) => {
+  res.status(200).json({ message: 'Get all todos.' });
+});
 
 export { getAllTodos };
