@@ -9,12 +9,12 @@ import app from './app';
 const PORT = Number(process.env.PORT) || 4040;
 
 async function startServer() {
-  // First try to start Database if it starts then start app.listen
   try {
+    // First try to start Database if it starts then start app.listen
     await connectToDatabase();
 
     app.listen(PORT, () => {
-      console.log('\n⚙️  Server is running on port:', PORT);
+      console.log('\n⚙️ Server is running on port:', PORT);
     });
   } catch (error) {
     console.error('\nFailed to start server:', error);

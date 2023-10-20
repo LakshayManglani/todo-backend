@@ -1,6 +1,5 @@
 import express from 'express';
 import { validationResult, ValidationChain } from 'express-validator';
-// can be reused by many routes
 
 // sequential processing, stops running validations chain if the previous one fails.
 const validate = (validations: ValidationChain[]) => {
@@ -9,6 +8,7 @@ const validate = (validations: ValidationChain[]) => {
     res: express.Response,
     next: express.NextFunction
   ) => {
+    // FIXME: It only runs one time and later validation doesn't get checked
     for (let validation of validations) {
       const result = await validation.run(req);
 

@@ -12,7 +12,7 @@ const sequelize = new Sequelize({
   // logging: false,
 });
 
-// Function to setup config and connect database
+// Function to authenticate database connection
 function connectToDatabase(): Promise<void> {
   return new Promise(async (resolve) => {
     try {
