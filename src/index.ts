@@ -1,22 +1,23 @@
 import { config } from 'dotenv';
 
-// FIXME: Can we shift this config statement after all import statement without breaking .env access to all file.
+// I have configured env varibles here so that import statements below them can get it.
 config({ path: './.env' });
 
-import connectMysql from './db/index';
+import connectToDatabase from './db';
 import app from './app';
 
 const PORT = Number(process.env.PORT) || 4040;
 
 async function startServer() {
+  // First try to start Database if it starts then start app.listen
   try {
-    await connectMysql();
+    await connectToDatabase();
+
     app.listen(PORT, () => {
-      console.log('⚙️  Server is running on port:', PORT);
+      console.log('\n⚙️  Server is running on port:', PORT);
     });
   } catch (error) {
-    console.error('error connecting to mysql:', error);
-    process.exit(1);
+    console.error('\nFailed to start server:', error);
   }
 }
 

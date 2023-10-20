@@ -1,9 +1,39 @@
-import { getDatabases } from '../models/todo.model';
+import { create } from '../models/todo.model';
 import createExpressHandler from '../util/expressHandler';
 
-const getAllTodos = createExpressHandler(async (req, res) => {
-  const data = await getDatabases();
-  res.status(200).json(data);
+// TODO Complete all the below todo functions
+
+const createTodo = createExpressHandler(async (req, res) => {
+  const { title, description } = req.body;
+
+  const data = await create(title.toString(), description.toString());
+  if (!data) {
+    throw new Error('\nFailed to create todo');
+  }
+
+  res.status(201).json({
+    statusCode: 201,
+    data: data,
+    message: 'Todo created successfully',
+    success: true,
+  });
 });
 
-export { getAllTodos };
+const getAllTodos = createExpressHandler(async (req, res) => {});
+
+const getTodoById = createExpressHandler(async (req, res) => {});
+
+const updateTodo = createExpressHandler(async (req, res) => {});
+
+const deleteTodo = createExpressHandler(async (req, res) => {});
+
+const toggleTodoDoneStatus = createExpressHandler(async (req, res) => {});
+
+export {
+  createTodo,
+  getAllTodos,
+  getTodoById,
+  updateTodo,
+  deleteTodo,
+  toggleTodoDoneStatus,
+};

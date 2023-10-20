@@ -1,30 +1,36 @@
-import mysql from 'mysql';
+import { Sequelize } from 'sequelize';
 
-// By exporting it now outer files can also query
-export let mysqlConnection: mysql.Connection;
+const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } = process.env;
 
-// Connect to mysql by using this function
-function connectMysql(): Promise<mysql.Connection> {
-  const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } =
-    process.env;
+// Config related to database
+const sequelize = new Sequelize({
+  dialect: 'mysql',
+  username: MYSQL_USER,
+  password: MYSQL_PASSWORD,
+  database: MYSQL_DATABASE,
+  host: MYSQL_HOST,
+  // logging: false,
+});
 
-  mysqlConnection = mysql.createConnection({
-    host: MYSQL_HOST,
-    user: MYSQL_USER,
-    password: MYSQL_PASSWORD,
-    database: MYSQL_DATABASE,
-  });
+// Function to setup config and connect database
+function connectToDatabase(): Promise<void> {
+  return new Promise(async (resolve) => {
+    try {
+      await sequelize.authenticate();
+      console.log('\n📤 Database connected');
 
-  return new Promise((resolve, reject) => {
-    mysqlConnection.connect(function (err) {
-      if (err) {
-        reject(err);
-      }
+      // So that every table can be created if doesn't exists
+      await sequelize.sync();
 
-      console.log('📤 connected as id', mysqlConnection.threadId);
-      resolve(mysqlConnection);
-    });
+      resolve();
+    } catch (error: any) {
+      console.error('\nFailed to connect to the database:', error.stack);
+
+      // Terminate Nodejs so that the execution stops
+      process.exit(1);
+    }
   });
 }
 
-export default connectMysql;
+export { sequelize };
+export default connectToDatabase;

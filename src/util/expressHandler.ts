@@ -1,13 +1,19 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 
 type ExpressFunction = (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
 ) => void;
 
 function createExpressHandler(fn: ExpressFunction) {
-  return fn;
+  return async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    return Promise.resolve(fn(req, res, next)).catch((error) => next(error));
+  };
 }
 
 export default createExpressHandler;

@@ -5,3 +5,4 @@ notes/
 # Files to ignore
 package-lock.json
 .env
+src/**/*.js

@@ -1,14 +1,30 @@
-import { mysqlConnection } from '../db';
+import { sequelize } from '../db';
+import { DataTypes } from 'sequelize';
 
-function getDatabases() {
-  return new Promise((resolve, reject) => {
-    mysqlConnection.query('SHOW DATABASES', (error, results, fields) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(results);
-    });
-  });
+const Todo = sequelize.define('Todo', {
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+    defaultValue: '',
+  },
+  isComplete: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    allowNull: false,
+  },
+});
+
+async function create(title: string, description: string) {
+  const todo = await Todo.create({ title, description });
+  return todo;
 }
 
-export { getDatabases };
+export { create };

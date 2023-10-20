@@ -15,8 +15,9 @@ Check out the frontend repository for this project on Github: [Todo Reopsitory](
 1. Clone this repository to your local machine.
 1. Open the terminal in the repository directory.
 1. Run "npm install" to install all dependencies.
-1. To start project in development run "npm run dev"
-1. To start project in production run "npm run start"
+1. To start project in development run "npm run dev" and "npm run tsc" in different terminals.
+1. To start project in production run "npm run start" and before starting compile it using "npm run tsc"
+1. Before commit run "npm run lint" to beautify the code formatting.
 
 ## Technologies Used
 
