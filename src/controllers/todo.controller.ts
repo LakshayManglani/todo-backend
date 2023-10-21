@@ -4,9 +4,12 @@ import createExpressHandler from '../util/expressHandler';
 // TODO Complete all the below todo functions
 
 const createTodo = createExpressHandler(async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description } = req.body as {
+    title: string;
+    description: string;
+  };
 
-  const data = await create(title.toString(), description.toString());
+  const data = await create(title, description);
   if (!data) {
     throw new Error('\nFailed to create todo');
   }
