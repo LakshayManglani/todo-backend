@@ -1,4 +1,4 @@
-import { create } from '../models/todo.model';
+import { create, getAll } from '../models/todo.model';
 import ApiResponse from '../util/apiResponse';
 import createExpressHandler from '../util/expressHandler';
 
@@ -20,7 +20,15 @@ const createTodo = createExpressHandler(async (req, res) => {
     .json(new ApiResponse(201, data, 'Todo created successfully', true));
 });
 
-const getAllTodos = createExpressHandler(async (req, res) => {});
+const getAllTodos = createExpressHandler(async (req, res) => {
+  const data = await getAll();
+  if (!data) {
+    throw new Error('\nNo Data Found');
+  }
+  res
+    .status(200)
+    .json(new ApiResponse(200, data, 'Data get successfully', true));
+});
 
 const getTodoById = createExpressHandler(async (req, res) => {});
 
