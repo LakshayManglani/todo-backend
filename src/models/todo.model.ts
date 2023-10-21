@@ -27,5 +27,9 @@ async function create(title: string, description: string): Promise<object> {
   const jsonData = await todo.toJSON();
   return jsonData;
 }
+async function getAll(): Promise<object> {
+  const todo = await Todo.findAll();
+  return todo;
+}
 
-export { create };
+export { create, getAll };
