@@ -8,12 +8,11 @@ const validate = (validations: ValidationChain[]) => {
     res: express.Response,
     next: express.NextFunction
   ) => {
-    // FIXME: It only runs one time and later validation doesn't get checked
     for (let validation of validations) {
       const result = await validation.run(req);
 
-      // If the length of the 'errors' is greater than 0, then break.
-      if (result.array.length) break;
+      // If there are errors then break
+      if (!result.isEmpty()) break;
     }
 
     const errors = validationResult(req);
