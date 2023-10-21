@@ -1,4 +1,5 @@
 import { create } from '../models/todo.model';
+import ApiResponse from '../util/apiResponse';
 import createExpressHandler from '../util/expressHandler';
 
 // TODO Complete all the below todo functions
@@ -14,12 +15,9 @@ const createTodo = createExpressHandler(async (req, res) => {
     throw new Error('\nFailed to create todo');
   }
 
-  res.status(201).json({
-    statusCode: 201,
-    data: data,
-    message: 'Todo created successfully',
-    success: true,
-  });
+  res
+    .status(201)
+    .json(new ApiResponse(201, data, 'Todo created successfully', true));
 });
 
 const getAllTodos = createExpressHandler(async (req, res) => {});
