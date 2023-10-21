@@ -22,9 +22,10 @@ const Todo = sequelize.define('Todo', {
   },
 });
 
-async function create(title: string, description: string) {
+async function create(title: string, description: string): Promise<object> {
   const todo = await Todo.create({ title, description });
-  return todo;
+  const jsonData = await todo.toJSON();
+  return jsonData;
 }
 
 export { create };
