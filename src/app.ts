@@ -11,7 +11,7 @@ app.use(
   })
 );
 
-// FIXME: Handle JSON Sytax Error. If request gets JSON with syntax error then send a response with message: JSON syntax error
+// FIXME: Handle JSON Syntax Error. If request gets JSON with syntax error then send a response with message: JSON syntax error
 
 // Parse the request body data into json format
 app.use(express.json());
