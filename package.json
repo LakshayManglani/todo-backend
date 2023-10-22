@@ -6,9 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "nodemon ./src/index.js",
-    "tsc": "tsc --watch",
-    "lint": "prettier . --write"
+    "nodemon": "npx nodemon ./src/index.js",
+    "tsc": "npx tsc --watch",
+    "lint": "npx prettier . --write"
   },
   "repository": {
     "type": "git",
