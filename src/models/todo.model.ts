@@ -27,9 +27,17 @@ async function create(title: string, description: string): Promise<object> {
   const jsonData = await todo.toJSON();
   return jsonData;
 }
-async function getAll(): Promise<object> {
+
+async function getAll(): Promise<Array<any>> {
   const todo = await Todo.findAll();
   return todo;
 }
 
-export { create, getAll };
+async function deleteAll(): Promise<number> {
+  const todo = await Todo.destroy({
+    where: {},
+  });
+  return todo;
+}
+
+export { create, getAll, deleteAll };
