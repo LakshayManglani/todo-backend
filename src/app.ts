@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import router from './routes/todo.routing';
+import createExpressErrorHandler from './util/expressErrorHandler';
 
 const app = express();
 
@@ -11,10 +12,21 @@ app.use(
   })
 );
 
-// FIXME: Handle JSON Syntax Error. If request gets JSON with syntax error then send a response with message: JSON syntax error
-
 // Parse the request body data into json format
 app.use(express.json());
+
+// Then check for JSON syntax error
+app.use(
+  createExpressErrorHandler((err, req, res, next) => {
+    if (err) {
+      res.status(400).json({
+        statusCode: 400,
+        message: 'Invaild JSON syntax',
+      });
+      return;
+    }
+  })
+);
 
 // api of todo
 app.use('/api/v1/todos', router);
