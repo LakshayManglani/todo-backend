@@ -1,4 +1,4 @@
-import { create, getAll } from '../models/todo.model';
+import { create, deleteAll, deleteById, getAll } from '../models/todo.model';
 import ApiResponse from '../util/apiResponse';
 import createExpressHandler from '../util/expressHandler';
 
@@ -22,8 +22,10 @@ const createTodo = createExpressHandler(async (req, res) => {
 
 const getAllTodos = createExpressHandler(async (req, res) => {
   const data = await getAll();
-  if (!data) {
-    throw new Error('\nNo Data Found');
+  if (data.length === 0) {
+    res
+      .status(200)
+      .json(new ApiResponse(200, data, 'Data does not exist', true));
   }
   res
     .status(200)
@@ -32,9 +34,59 @@ const getAllTodos = createExpressHandler(async (req, res) => {
 
 const getTodoById = createExpressHandler(async (req, res) => {});
 
-const updateTodo = createExpressHandler(async (req, res) => {});
+const updateTodoById = createExpressHandler(async (req, res) => {});
 
-const deleteTodo = createExpressHandler(async (req, res) => {});
+const deleteTodoById = createExpressHandler(async (req, res) => {
+  const id = req.path.replace('/:', '');
+  const data = await deleteById(Number(id));
+
+  if (data === 0) {
+    res
+      .status(400)
+      .json(
+        new ApiResponse(
+          400,
+          { deletedRows: data },
+          `Todo with ID ${id} not found.`,
+          false
+        )
+      );
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        204,
+        { deletedRows: data },
+        'Data deletd successfully',
+        true
+      )
+    );
+});
+
+const deleteAllTodos = createExpressHandler(async (req, res) => {
+  const data = await deleteAll();
+
+  if (data === 0) {
+    res
+      .status(200)
+      .json(
+        new ApiResponse(204, { deletedRows: data }, 'Data does not exist', true)
+      );
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        204,
+        { deletedRows: data },
+        'Data deletd successfully',
+        true
+      )
+    );
+});
 
 const toggleTodoDoneStatus = createExpressHandler(async (req, res) => {});
 
@@ -42,7 +94,8 @@ export {
   createTodo,
   getAllTodos,
   getTodoById,
-  updateTodo,
-  deleteTodo,
+  updateTodoById,
+  deleteTodoById,
   toggleTodoDoneStatus,
+  deleteAllTodos,
 };
