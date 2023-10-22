@@ -13,23 +13,19 @@ const sequelize = new Sequelize({
 });
 
 // Function to authenticate database connection
-function connectToDatabase(): Promise<void> {
-  return new Promise(async (resolve) => {
-    try {
-      await sequelize.authenticate();
-      console.log('\n📤 Database connected');
+async function connectToDatabase(): Promise<void> {
+  try {
+    await sequelize.authenticate();
+    console.log('\n📤 Database connected');
 
-      // So that every table can be created if doesn't exists
-      await sequelize.sync();
+    // So that every table can be created if doesn't exists
+    await sequelize.sync();
+  } catch (error: any) {
+    console.error('\nFailed to connect to the database:', error.stack);
 
-      resolve();
-    } catch (error: any) {
-      console.error('\nFailed to connect to the database:', error.stack);
-
-      // Terminate Nodejs so that the execution stops
-      process.exit(1);
-    }
-  });
+    // Terminate Nodejs so that the execution stops
+    process.exit(1);
+  }
 }
 
 export { sequelize };
