@@ -40,4 +40,9 @@ async function deleteAll(): Promise<number> {
   return todo;
 }
 
-export { create, getAll, deleteAll };
+async function deleteById(id: number): Promise<number | null> {
+  const todo = await Todo.destroy({ where: { id: id } });
+  return todo;
+}
+
+export { create, getAll, deleteAll, deleteById };
