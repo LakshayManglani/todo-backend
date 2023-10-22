@@ -1,7 +1,7 @@
 import express from 'express';
 
 type ExpressErrorHandler = (
-  err: any,
+  err: Error,
   req: express.Request,
   res: express.Response,
   next: express.NextFunction

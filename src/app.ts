@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import router from './routes/todo.routing';
 import createExpressErrorHandler from './util/expressErrorHandler';
+import ApiError from './util/apiError';
 
 const app = express();
 
@@ -19,10 +20,11 @@ app.use(express.json());
 app.use(
   createExpressErrorHandler((err, req, res, next) => {
     if (err) {
-      res.status(400).json({
-        statusCode: 400,
-        message: 'Invaild JSON syntax',
-      });
+      const { name, message } = err;
+
+      res
+        .status(400)
+        .json(new ApiError(400, 'Invalid JSON syntax', { name, message }));
       return;
     }
   })
