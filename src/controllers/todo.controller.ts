@@ -34,9 +34,9 @@ const getAllTodos = createExpressHandler(async (req, res) => {
 
 const getTodoById = createExpressHandler(async (req, res) => {});
 
-const updateTodo = createExpressHandler(async (req, res) => {});
+const updateTodoById = createExpressHandler(async (req, res) => {});
 
-const deleteTodo = createExpressHandler(async (req, res) => {});
+const deleteTodoById = createExpressHandler(async (req, res) => {});
 
 const deleteAllTodos = createExpressHandler(async (req, res) => {
   const data = await deleteAll();
@@ -67,8 +67,8 @@ export {
   createTodo,
   getAllTodos,
   getTodoById,
-  updateTodo,
-  deleteTodo,
+  updateTodoById,
+  deleteTodoById,
   toggleTodoDoneStatus,
   deleteAllTodos,
 };

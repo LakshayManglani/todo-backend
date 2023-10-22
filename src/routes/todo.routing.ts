@@ -5,8 +5,8 @@ import {
   getAllTodos,
   getTodoById,
   deleteAllTodos,
-  updateTodo,
-  deleteTodo,
+  updateTodoById,
+  deleteTodoById,
   toggleTodoDoneStatus,
 } from '../controllers/todo.controller';
 
@@ -20,7 +20,11 @@ router
   .get(getAllTodos)
   .delete(deleteAllTodos);
 
-router.route('/:todoId').get(getTodoById).patch(updateTodo).delete(deleteTodo);
+router
+  .route('/:todoId')
+  .get(getTodoById)
+  .patch(updateTodoById)
+  .delete(deleteTodoById);
 
 router.route('/toogle/status/:todoId').patch(toggleTodoDoneStatus);
 
