@@ -34,9 +34,12 @@ async function getAll(): Promise<Array<any>> {
 }
 
 async function deleteAll(): Promise<number> {
-  const todo = Todo.count();
-  await Todo.truncate();
-  return todo;
+  const todo = await Todo.count();
+  if (todo !== 0) {
+    await Todo.truncate();
+    return todo;
+  }
+  return 0;
 }
 
 async function deleteById(id: number): Promise<number | null> {

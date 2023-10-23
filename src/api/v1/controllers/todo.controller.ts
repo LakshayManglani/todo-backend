@@ -13,6 +13,7 @@ const createTodo = createExpressHandler(async (req, res) => {
   const data = await create(title, description);
   if (!data) {
     throw new Error('\nFailed to create todo');
+    return;
   }
 
   res
@@ -26,6 +27,7 @@ const getAllTodos = createExpressHandler(async (req, res) => {
     res
       .status(200)
       .json(new ApiResponse(200, data, 'Data does not exist', true));
+    return;
   }
   res
     .status(200)
@@ -51,6 +53,7 @@ const deleteTodoById = createExpressHandler(async (req, res) => {
           false
         )
       );
+    return;
   }
 
   res
@@ -74,6 +77,7 @@ const deleteAllTodos = createExpressHandler(async (req, res) => {
       .json(
         new ApiResponse(204, { deletedRows: data }, 'Data does not exist', true)
       );
+    return;
   }
 
   res
