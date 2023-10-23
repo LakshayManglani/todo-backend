@@ -2,12 +2,12 @@
   "name": "todoapi",
   "version": "1.0.0",
   "description": "API for todo app.",
-  "main": "./src/index.js",
+  "main": "./src/api/v1/index.js",
   "type": "commonjs",
   "scripts": {
     "start": "node ./src/index.js",
     "tsc": "npx tsc --watch",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/api/v1/index.ts",
     "lint": "npx prettier . --write"
   },
   "repository": {
