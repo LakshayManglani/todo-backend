@@ -34,9 +34,8 @@ async function getAll(): Promise<Array<any>> {
 }
 
 async function deleteAll(): Promise<number> {
-  const todo = await Todo.destroy({
-    where: {},
-  });
+  const todo = Todo.count();
+  await Todo.truncate();
   return todo;
 }
 
