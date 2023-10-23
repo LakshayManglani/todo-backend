@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node ./src/index.js",
+    "tsc": "npx tsc --watch",
     "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "lint": "npx prettier . --write"
   },
