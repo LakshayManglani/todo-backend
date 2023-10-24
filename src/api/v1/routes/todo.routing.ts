@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { createTodoValidator } from '../validators/todo.validator';
+import {
+  createTodoValidator,
+  deleteTodoByIdValidator,
+} from '../validators/todo.validator';
 import {
   createTodo,
   getAllTodos,
@@ -24,7 +27,7 @@ router
   .route('/:todoId')
   .get(getTodoById)
   .patch(updateTodoById)
-  .delete(deleteTodoById);
+  .delete(deleteTodoByIdValidator, deleteTodoById);
 
 router.route('/toogle/status/:todoId').patch(toggleTodoDoneStatus);
 

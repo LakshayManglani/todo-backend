@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import validate from '../util/validate';
 
 const createTodoValidator = validate([
@@ -10,7 +10,9 @@ const createTodoValidator = validate([
     .withMessage('Todo title is required and cannot be empty.'),
   body('description')
     .isString()
-    .withMessage('Desciption must be defined of type string.'),
+    .withMessage('Todo Desciption must be of type string.'),
 ]);
-
-export { createTodoValidator };
+const deleteTodoByIdValidator = validate([
+  param('todoId').toInt().isInt().withMessage('Todo Id must be type int'),
+]);
+export { createTodoValidator, deleteTodoByIdValidator };
