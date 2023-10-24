@@ -15,11 +15,10 @@ const sequelize = new Sequelize({
 // Function to authenticate database connection
 async function connectToDatabase(): Promise<void> {
   try {
-    await sequelize.authenticate();
-    console.log('\n📤 Database connected');
-
     // So that every table can be created if doesn't exists
     await sequelize.sync();
+
+    console.log('\n📤 Database connected');
   } catch (error: any) {
     console.error('\nFailed to connect to the database:', error.stack);
 
