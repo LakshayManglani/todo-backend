@@ -62,7 +62,6 @@ const updateTodoById = createExpressHandler(async (req, res) => {});
 const deleteTodoById = createExpressHandler(async (req, res) => {
   try {
     let { todoId } = req.params;
-    todoId = todoId.replace(':', '');
 
     const data = await deleteById(Number(todoId));
 
