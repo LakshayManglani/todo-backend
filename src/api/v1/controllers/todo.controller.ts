@@ -39,33 +39,44 @@ const getTodoById = createExpressHandler(async (req, res) => {});
 const updateTodoById = createExpressHandler(async (req, res) => {});
 
 const deleteTodoById = createExpressHandler(async (req, res) => {
-  const id = req.path.replace('/:', '');
-  const data = await deleteById(Number(id));
+  try {
+    let { todoId } = req.params;
 
-  if (data === 0) {
+    const data = await deleteById(Number(todoId));
+
+    if (data === 0) {
+      res
+        .status(400)
+        .json(
+          new ApiResponse(400, null, `Todo with ID ${todoId} not found.`, false)
+        );
+      return;
+    }
+
     res
-      .status(400)
+      .status(200)
       .json(
         new ApiResponse(
-          400,
+          204,
           { deletedRows: data },
-          `Todo with ID ${id} not found.`,
+          'Data deleted successfully',
+          true
+        )
+      );
+  } catch (error) {
+    console.error('Failed to deleteTodoById:', error);
+
+    res
+      .status(500)
+      .json(
+        new ApiResponse(
+          500,
+          null,
+          'An error occured while deleting the todo',
           false
         )
       );
-    return;
   }
-
-  res
-    .status(200)
-    .json(
-      new ApiResponse(
-        204,
-        { deletedRows: data },
-        'Data deletd successfully',
-        true
-      )
-    );
 });
 
 const deleteAllTodos = createExpressHandler(async (req, res) => {
