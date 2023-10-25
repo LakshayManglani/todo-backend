@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 config({ path: './.env' });
 
 import connectToDatabase from './db';
-import app from './app';
+import app, { startApp } from './app';
 
 const PORT = Number(process.env.PORT) || 4040;
 
@@ -12,6 +12,8 @@ async function startServer() {
   try {
     // First try to start Database if it starts then start app.listen
     await connectToDatabase();
+
+    startApp();
 
     app.listen(PORT, () => {
       console.log('\n⚙️  Server is running on port:', PORT);
