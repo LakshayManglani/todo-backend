@@ -13,22 +13,26 @@ import {
   toggleTodoDoneStatus,
 } from '../controllers/todo.controller';
 
-const router = Router();
+function todoRouter() {
+  const router = Router();
 
-// TODO: Create validator for all this HTTP methods
+  // TODO: Create validator for all this HTTP methods
 
-router
-  .route('/')
-  .post(createTodoValidator, createTodo)
-  .get(getAllTodos)
-  .delete(deleteAllTodos);
+  router
+    .route('/')
+    .post(createTodoValidator, createTodo)
+    .get(getAllTodos)
+    .delete(deleteAllTodos);
 
-router
-  .route('/:todoId')
-  .get(getTodoById)
-  .patch(updateTodoById)
-  .delete(deleteTodoByIdValidator, deleteTodoById);
+  router
+    .route('/:todoId')
+    .get(getTodoById)
+    .patch(updateTodoById)
+    .delete(deleteTodoByIdValidator, deleteTodoById);
 
-router.route('/toogle/status/:todoId').patch(toggleTodoDoneStatus);
+  router.route('/toogle/status/:todoId').patch(toggleTodoDoneStatus);
 
-export default router;
+  return router;
+}
+
+export default todoRouter;
