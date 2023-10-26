@@ -5,6 +5,7 @@ import {
   getAll,
   getById,
   toggleIsCompleteById,
+  updateById,
 } from '../models/todo.model';
 import ApiError from '../util/apiError';
 import ApiResponse from '../util/apiResponse';
@@ -79,7 +80,37 @@ const getTodoById = createExpressHandler(async (req, res) => {
   }
 });
 
-const updateTodoById = createExpressHandler(async (req, res) => {});
+const updateTodoById = createExpressHandler(async (req, res) => {
+  try {
+    let { todoId } = req.params;
+    const { title, description } = req.body as {
+      title: string;
+      description: string;
+    };
+
+    const updatedTodo = await updateById(Number(todoId), title, description);
+
+    if (updatedTodo === null) {
+      res
+        .status(404)
+        .json(
+          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, false)
+        );
+      return;
+    }
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, updatedTodo, 'Todo updated successfully', true)
+      );
+  } catch (error: any) {
+    console.error('Failed to updateTodoById:', error);
+    res
+      .status(500)
+      .json(new ApiError(500, null, false, 'Failed to update the todo.'));
+  }
+});
 
 const deleteTodoById = createExpressHandler(async (req, res) => {
   try {
