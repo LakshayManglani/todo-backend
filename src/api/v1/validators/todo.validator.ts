@@ -13,8 +13,8 @@ const createTodoValidator = validate([
     .withMessage('Todo Desciption must be of type string.'),
 ]);
 
-const deleteTodoByIdValidator = validate([
+const todoByIdValidator = validate([
   param('todoId').isInt().withMessage('Todo Id must be type int'),
 ]);
 
-export { createTodoValidator, deleteTodoByIdValidator };
+export { createTodoValidator, todoByIdValidator };

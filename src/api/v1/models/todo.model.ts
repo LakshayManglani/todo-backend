@@ -1,6 +1,6 @@
 import { sequelize } from '../db';
 import { DataTypes } from 'sequelize';
-import { asyncHandller } from '../../../util/asyncHandler';
+import { asyncHandller } from '../util/asyncHandler';
 
 const Todo = sequelize.define('Todo', {
   title: {
@@ -38,6 +38,13 @@ async function getAll(): Promise<object[]> {
   }, 'Failed to getAll todos:');
 }
 
+async function getById(id: number): Promise<object> {
+  return asyncHandller(async () => {
+    const todo = await Todo.findByPk(id);
+    return todo;
+  }, 'Failed to getById todos:');
+}
+
 async function deleteAll(): Promise<number> {
   return asyncHandller(async () => {
     const todoCount = await Todo.count();
@@ -55,51 +62,21 @@ async function deleteById(id: number): Promise<number> {
   }, 'Failed to deleteById: ');
 }
 
-// This Is the old version of code without asyncHandler implementation
+async function toggleIsCompleteById(id: number): Promise<number> {
+  return asyncHandller(async () => {
+    const todo = await Todo.findByPk(id);
+    if (!todo) {
+      return 0;
+    }
 
-// async function create(title: string, description: string): Promise<object> {
-//   try {
-//     const todo = await Todo.create({ title, description });
-//     const jsonData = await todo.toJSON();
-//     return jsonData;
-//   } catch (error) {
-//     console.error('Failed to create todo:', error);
-//     throw error;
-//   }
-// }
+    const { isComplete } = todo.dataValues;
 
-// async function getAll(): Promise<object[]> {
-//   try {
-//     const todo = await Todo.findAll();
-//     return todo;
-//   } catch (error) {
-//     console.error('Failed to getAll todos:', error);
-//     throw error;
-//   }
-// }
+    const updateTodo = await Todo.update(
+      { isComplete: !isComplete },
+      { where: { id } }
+    );
+    return updateTodo;
+  }, 'Failed to toggleIsCompleteById: ');
+}
 
-// async function deleteAll(): Promise<number> {
-//   try {
-//     const todo = await Todo.count();
-//     if (todo > 0) {
-//       await Todo.truncate();
-//       return todo;
-//     }
-//     return 0;
-//   } catch (error) {
-//     console.error('Failed to deleteAll todos', error);
-//     throw error;
-//   }
-// }
-
-// async function deleteById(id: number): Promise<number> {
-//   try {
-//     const todo = await Todo.destroy({ where: { id } });
-//     return todo;
-//   } catch (error) {
-//     console.error('Failed to deleteById: ', error);
-//     throw error;
-//   }
-// }
-
-export { create, getAll, deleteAll, deleteById };
+export { create, getAll, getById, deleteAll, deleteById, toggleIsCompleteById };

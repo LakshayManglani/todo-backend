@@ -25,7 +25,9 @@ function startApp() {
 
         res
           .status(400)
-          .json(new ApiError(400, 'Invalid JSON syntax', { name, message }));
+          .json(
+            new ApiError(400, { name, message }, false, 'Invalid JSON syntax')
+          );
         return;
       }
     })
