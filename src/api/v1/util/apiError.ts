@@ -1,7 +1,7 @@
 class ApiError {
   constructor(
     public statusCode: number,
-    public error: object,
+    public error: Error,
     public success: boolean,
     public message?: string
   ) {}

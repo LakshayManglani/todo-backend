@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
   createTodoValidator,
-  deleteTodoByIdValidator,
+  todoByIdValidator,
 } from '../validators/todo.validator';
 import {
   createTodo,
@@ -26,11 +26,13 @@ function todoRouter() {
 
   router
     .route('/:todoId')
-    .get(getTodoById)
+    .get(todoByIdValidator, getTodoById)
     .patch(updateTodoById)
-    .delete(deleteTodoByIdValidator, deleteTodoById);
+    .delete(todoByIdValidator, deleteTodoById);
 
-  router.route('/toogle/status/:todoId').patch(toggleTodoDoneStatus);
+  router
+    .route('/toogle/status/:todoId')
+    .patch(todoByIdValidator, toggleTodoDoneStatus);
 
   return router;
 }
