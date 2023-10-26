@@ -140,9 +140,9 @@ const toggleTodoDoneStatus = createExpressHandler(async (req, res) => {
   try {
     let { todoId } = req.params;
 
-    const data = await toggleIsCompleteById(Number(todoId));
+    const isComplete = await toggleIsCompleteById(Number(todoId));
 
-    if (data == 0) {
+    if (isComplete === null) {
       res
         .status(404)
         .json(
@@ -156,7 +156,7 @@ const toggleTodoDoneStatus = createExpressHandler(async (req, res) => {
       .json(
         new ApiResponse(
           200,
-          { rowsUpdated: data },
+          { isComplete },
           'isComplete toggle succesfully',
           true
         )

@@ -62,11 +62,11 @@ async function deleteById(id: number): Promise<number> {
   }, 'Failed to deleteById: ');
 }
 
-async function toggleIsCompleteById(id: number): Promise<number> {
+async function toggleIsCompleteById(id: number): Promise<boolean | null> {
   return asyncHandller(async () => {
     const todo = await Todo.findByPk(id);
     if (!todo) {
-      return 0;
+      return null;
     }
 
     const { isComplete } = todo.dataValues;
@@ -75,7 +75,7 @@ async function toggleIsCompleteById(id: number): Promise<number> {
       { isComplete: !isComplete },
       { where: { id } }
     );
-    return updateTodo;
+    return !isComplete;
   }, 'Failed to toggleIsCompleteById: ');
 }
 
