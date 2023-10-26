@@ -1,5 +1,7 @@
 import express from 'express';
 import { validationResult, ValidationChain } from 'express-validator';
+import ApiError from './apiError';
+import { QueryError } from 'sequelize';
 
 // sequential processing, stops running validations chain if the previous one fails.
 const validate = (validations: ValidationChain[]) => {
@@ -20,7 +22,9 @@ const validate = (validations: ValidationChain[]) => {
       return next();
     }
 
-    res.status(400).json({ errors: errors.array() });
+    res
+      .status(400)
+      .json(new ApiError(400, [...errors.array()], false, 'Validation Failed'));
   };
 };
 
