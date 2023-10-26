@@ -1,5 +1,5 @@
 import { sequelize } from '../db';
-import { DataTypes } from 'sequelize';
+import { BaseError, DataTypes } from 'sequelize';
 import { asyncHandller } from '../util/asyncHandler';
 
 const Todo = sequelize.define('Todo', {

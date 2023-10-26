@@ -1,4 +1,5 @@
 import { create, deleteAll, deleteById, getAll } from '../models/todo.model';
+import ApiError from '../util/apiError';
 import ApiResponse from '../util/apiResponse';
 import createExpressHandler from '../util/expressHandler';
 
@@ -16,17 +17,17 @@ const createTodo = createExpressHandler(async (req, res) => {
     res
       .status(201)
       .json(new ApiResponse(201, data, 'Todo created successfully', true));
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to createTodo:', error);
-
+    const { name, message } = error;
     res
       .status(500)
       .json(
-        new ApiResponse(
+        new ApiError(
           500,
-          null,
-          'An error occured while creating the todo',
-          false
+          { name, message },
+          false,
+          'An error occured while creating the todo'
         )
       );
   }
@@ -39,17 +40,17 @@ const getAllTodos = createExpressHandler(async (req, res) => {
     res
       .status(200)
       .json(new ApiResponse(200, data, 'Data get successfully', true));
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to getAllTodos:', error);
-
+    const { name, message } = error;
     res
       .status(500)
       .json(
-        new ApiResponse(
+        new ApiError(
           500,
-          null,
-          'An error occured while getting all the todos',
-          false
+          { name, message },
+          false,
+          'An error occured while getting all the todos'
         )
       );
   }
@@ -67,9 +68,9 @@ const deleteTodoById = createExpressHandler(async (req, res) => {
 
     if (data === 0) {
       res
-        .status(400)
+        .status(404)
         .json(
-          new ApiResponse(400, null, `Todo with ID ${todoId} not found.`, false)
+          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, false)
         );
       return;
     }
@@ -84,17 +85,17 @@ const deleteTodoById = createExpressHandler(async (req, res) => {
           true
         )
       );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to deleteTodoById:', error);
-
+    const { name, message } = error;
     res
       .status(500)
       .json(
-        new ApiResponse(
+        new ApiError(
           500,
-          null,
-          'An error occured while deleting the todo',
-          false
+          { name, message },
+          false,
+          'An error occured while deleting the todo'
         )
       );
   }
@@ -114,17 +115,17 @@ const deleteAllTodos = createExpressHandler(async (req, res) => {
           true
         )
       );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to deleteTodoById:', error);
-
+    const { name, message } = error;
     res
       .status(500)
       .json(
-        new ApiResponse(
+        new ApiError(
           500,
-          null,
-          'An error occured while deleting all the todos',
-          false
+          { name, message },
+          false,
+          'An error occured while deleting all the todos'
         )
       );
   }
