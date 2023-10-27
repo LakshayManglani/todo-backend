@@ -10,7 +10,7 @@ const PORT = Number(process.env.PORT) || 4040;
 
 async function startServer() {
   try {
-    // First try to start Database if it starts then start app.listen
+    // First try to connect Database and after successfully connected run startApp()
     await connectToDatabase();
 
     startApp();

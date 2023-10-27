@@ -42,7 +42,7 @@ async function getById(id: number): Promise<object> {
   return asyncHandller(async () => {
     const todo = await Todo.findByPk(id);
     return todo;
-  }, 'Failed to getById todos:');
+  }, 'Failed to getById:');
 }
 
 async function deleteAll(): Promise<number> {
@@ -71,10 +71,7 @@ async function toggleIsCompleteById(id: number): Promise<boolean | null> {
 
     const { isComplete } = todo.dataValues;
 
-    const updateTodo = await Todo.update(
-      { isComplete: !isComplete },
-      { where: { id } }
-    );
+    await Todo.update({ isComplete: !isComplete }, { where: { id } });
     return !isComplete;
   }, 'Failed to toggleIsCompleteById: ');
 }
@@ -83,22 +80,15 @@ async function updateById(
   id: number,
   upTitle: string,
   upDescription: string
-): Promise<any> {
+): Promise<number> {
   return asyncHandller(async () => {
-    const todo = await Todo.findByPk(id);
-    if (!todo) {
-      return null;
-    }
-
     // Perform the update operation
-    await Todo.update(
+    const affectedRows = await Todo.update(
       { title: upTitle, description: upDescription },
       { where: { id } }
     );
 
-    // Fetch the updated todo after the update operation
-    const updatedTodo = await Todo.findByPk(id);
-    return updatedTodo;
+    return affectedRows[0];
   }, 'Failed to updateById: ');
 }
 

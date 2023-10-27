@@ -20,7 +20,7 @@ async function connectToDatabase(): Promise<void> {
 
     console.log('\n📤 Database connected');
   } catch (error: any) {
-    console.error('\nFailed to connect to the database:', error.stack);
+    console.error('\nFailed to connect to the database:', error);
 
     // Terminate Nodejs so that the execution stops
     process.exit(1);

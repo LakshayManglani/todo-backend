@@ -1,7 +1,6 @@
 import express from 'express';
 import { validationResult, ValidationChain } from 'express-validator';
-import ApiError from './apiError';
-import { QueryError } from 'sequelize';
+import ApiError from '../util/apiError';
 
 // sequential processing, stops running validations chain if the previous one fails.
 const validate = (validations: ValidationChain[]) => {
