@@ -79,4 +79,35 @@ async function toggleIsCompleteById(id: number): Promise<boolean | null> {
   }, 'Failed to toggleIsCompleteById: ');
 }
 
-export { create, getAll, getById, deleteAll, deleteById, toggleIsCompleteById };
+async function updateById(
+  id: number,
+  upTitle: string,
+  upDescription: string
+): Promise<any> {
+  return asyncHandller(async () => {
+    const todo = await Todo.findByPk(id);
+    if (!todo) {
+      return null;
+    }
+
+    // Perform the update operation
+    await Todo.update(
+      { title: upTitle, description: upDescription },
+      { where: { id } }
+    );
+
+    // Fetch the updated todo after the update operation
+    const updatedTodo = await Todo.findByPk(id);
+    return updatedTodo;
+  }, 'Failed to updateById: ');
+}
+
+export {
+  create,
+  getAll,
+  getById,
+  deleteAll,
+  deleteById,
+  toggleIsCompleteById,
+  updateById,
+};
