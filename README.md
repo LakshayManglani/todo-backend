@@ -37,6 +37,8 @@ This project is licensed under the MIT License. See the [LICENSE](./LICENSE) fil
 
 ## Contact
 
-For any inquiries or feedback, please reach out to us at [lakshaymanglani2212@gmail.com](mailto:lakshaymanglani2212@gmail.com)
+For any inquiries or feedback, please reach out to us using the following email addresses:
+[wadhwanichirag94@gmail.com](mailto:wadhwanichirag94@gmail.com)
+[lakshaymanglani2212@gmail.com](mailto:lakshaymanglani2212@gmail.com)
 
 Enjoy exploring and cooking delicious recipes with Recipe Finder!
