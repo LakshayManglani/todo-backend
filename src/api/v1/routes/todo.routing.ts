@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   createTodoValidator,
   todoByIdValidator,
+  updateTodoValidator,
 } from '../validators/todo.validator';
 import {
   createTodo,
@@ -16,8 +17,6 @@ import {
 function todoRouter() {
   const router = Router();
 
-  // TODO: Create validator for all this HTTP methods
-
   router
     .route('/')
     .post(createTodoValidator, createTodo)
@@ -27,7 +26,7 @@ function todoRouter() {
   router
     .route('/:todoId')
     .get(todoByIdValidator, getTodoById)
-    .patch(updateTodoById)
+    .patch(updateTodoById, updateTodoById)
     .delete(todoByIdValidator, deleteTodoById);
 
   router
