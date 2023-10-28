@@ -20,6 +20,9 @@
     "backend"
   ],
   "author": "Lakshay Manglani",
+  "contributors": [
+    "Chirag Wadhwani"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/LakshayManglani/todo-backend/issues"
@@ -37,7 +40,6 @@
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.19",
     "@types/node": "^20.8.6",
-    "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2"
