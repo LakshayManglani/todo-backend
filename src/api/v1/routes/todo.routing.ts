@@ -26,7 +26,7 @@ function todoRouter() {
   router
     .route('/:todoId')
     .get(todoByIdValidator, getTodoById)
-    .patch(updateTodoById, updateTodoById)
+    .patch(updateTodoValidator, updateTodoById)
     .delete(todoByIdValidator, deleteTodoById);
 
   router
