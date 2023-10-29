@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import createExpressErrorHandler from './util/expressErrorHandler';
 import ApiError from './util/apiError';
+import userRouter from './routes/user.routing';
 import todoRouter from './routes/todo.routing';
 
 const app = express();
@@ -32,6 +33,9 @@ function startApp() {
       }
     })
   );
+
+  // api of user
+  app.use('/api/v1/user', userRouter());
 
   // api of todo
   app.use('/api/v1/todos', todoRouter());
