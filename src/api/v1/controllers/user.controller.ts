@@ -1,4 +1,5 @@
 import createExpressHandler from '../util/expressHandler';
+import User from '../models/user.model';
 
 const changeCurrentPassword = createExpressHandler(async (req, res) => {});
 

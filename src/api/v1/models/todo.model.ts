@@ -1,6 +1,7 @@
 import { sequelize } from '../db';
 import { DataTypes } from 'sequelize';
 import { asyncHandller } from '../util/asyncHandler';
+import User from './user.model';
 
 const Todo = sequelize.define('Todo', {
   title: {
@@ -16,12 +17,9 @@ const Todo = sequelize.define('Todo', {
     defaultValue: false,
     allowNull: false,
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    allowNull: false,
-  },
 });
+
+User.hasOne(Todo);
 
 async function create(title: string, description: string): Promise<object> {
   return asyncHandller(async () => {
@@ -101,3 +99,4 @@ export {
   toggleIsCompleteById,
   updateById,
 };
+export default Todo;
