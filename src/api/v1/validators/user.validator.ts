@@ -8,22 +8,22 @@ import validate from './validate';
 const registerUserValidator = validate([
   body('givenName')
     .isString()
-    .withMessage('Title must be defined of type string')
+    .withMessage('Given Name must be defined of type string')
     .notEmpty()
     .withMessage('Given name is required'),
   body('familyName')
     .optional()
     .isString()
-    .withMessage('Title must be defined of type string'),
+    .withMessage('Family Name must be defined of type string'),
   body('email')
     .isString()
-    .withMessage('Title must be defined of type string')
+    .withMessage('Email must be defined of type string')
     .isEmail()
     .withMessage('Invalid email')
     .normalizeEmail(),
   body('userName')
     .isString()
-    .withMessage('Title must be defined of type string')
+    .withMessage('Username must be defined of type string')
     .notEmpty()
     .withMessage('Username is required')
     .matches(/^\S*$/)
@@ -32,7 +32,7 @@ const registerUserValidator = validate([
     .withMessage('Username should only contain alphanumeric characters'),
   body('password')
     .isString()
-    .withMessage('Title must be defined of type string')
+    .withMessage('Password must be defined of type string')
     .matches(/^\S*$/)
     .withMessage('Password should not contain spaces')
     .isLength({ min: 6 })
