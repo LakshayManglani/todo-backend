@@ -1,7 +1,7 @@
 import createExpressHandler from '../util/expressHandler';
 import ApiError from '../util/apiError';
 import ApiResponse from '../util/apiResponse';
-import { register } from '../models//user.model';
+import { register } from '../models/user.model';
 
 const changeCurrentPassword = createExpressHandler(async (req, res) => {});
 

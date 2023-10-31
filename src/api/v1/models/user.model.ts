@@ -13,6 +13,7 @@ const User = sequelize.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   userName: {
     type: DataTypes.STRING,
@@ -51,5 +52,12 @@ async function register(
     throw error;
   }
 }
-
+// User.truncate();
+// User.create({
+//   givenName: 'Lakshay',
+//   familyName: 'Manglani',
+//   email: 'lakshaymanglani2212@gmail.com',
+//   password: 'amio',
+//   role: 'admin',
+// });
 export { register };
