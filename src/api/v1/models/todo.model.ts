@@ -17,13 +17,21 @@ const Todo = sequelize.define('Todo', {
     defaultValue: false,
     allowNull: false,
   },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
 
-User.hasOne(Todo);
+User.hasOne(Todo, { foreignKey: 'userId' });
 
-async function create(title: string, description: string): Promise<object> {
+async function create(
+  title: string,
+  description: string,
+  userId: number
+): Promise<object> {
   return asyncHandller(async () => {
-    const todo = await Todo.create({ title, description });
+    const todo = await Todo.create({ title, description, userId });
     const jsonData = await todo.toJSON();
     return jsonData;
   }, 'Failed to create todo:');

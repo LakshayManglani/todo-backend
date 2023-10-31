@@ -30,4 +30,13 @@ const User = sequelize.define('User', {
   },
 });
 
+// For only development purpose
+User.create({
+  givenName: 'Lakshay',
+  familyName: 'Manglani',
+  email: 'lakshaymanglani2212@gmail.com',
+  password: 'amio',
+  role: 'admin',
+});
+
 export default User;
