@@ -14,12 +14,41 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  userName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   avatar: {
     type: DataTypes.STRING,
-    defaultValue: '../../public/',
+    defaultValue: '../../public/dummy_profile_image.jpeg',
   },
 });
+
+async function register(
+  givenName: string,
+  familyName: string,
+  email: string,
+  userName: string,
+  password: string
+): Promise<object> {
+  try {
+    const user = await User.create({
+      givenName,
+      familyName,
+      email,
+      userName,
+      password,
+    });
+    const jsonData = await user.toJSON();
+    return jsonData;
+  } catch (error) {
+    console.error('Failed to register User', error);
+    throw error;
+  }
+}
+
+export { register };
