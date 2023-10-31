@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { registerUserValidator } from '../validators/user.validator';
 import {
   changeCurrentPassword,
   forgotPasswordRequest,
@@ -14,7 +15,7 @@ function userRouter() {
   const router = Router();
 
   // Unsecured route
-  router.route('/register').post(registerUser);
+  router.route('/register').post(registerUserValidator, registerUser);
 
   router.route('/login').post(loginUser);
 

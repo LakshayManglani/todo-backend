@@ -13,6 +13,12 @@ const User = sequelize.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
+  },
+  userName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
@@ -20,6 +26,38 @@ const User = sequelize.define('User', {
   },
   avatar: {
     type: DataTypes.STRING,
-    defaultValue: '../../public/',
+    defaultValue: '../../public/dummy_profile_image.jpeg',
   },
 });
+
+async function register(
+  givenName: string,
+  familyName: string,
+  email: string,
+  userName: string,
+  password: string
+): Promise<object> {
+  try {
+    const user = await User.create({
+      givenName,
+      familyName,
+      email,
+      userName,
+      password,
+    });
+    const jsonData = await user.toJSON();
+    return jsonData;
+  } catch (error) {
+    console.error('Failed to register User', error);
+    throw error;
+  }
+}
+// User.truncate();
+// User.create({
+//   givenName: 'Lakshay',
+//   familyName: 'Manglani',
+//   email: 'lakshaymanglani2212@gmail.com',
+//   password: 'amio',
+//   role: 'admin',
+// });
+export { register };
