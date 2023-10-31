@@ -6,18 +6,24 @@ import validate from './validate';
 //       userName,
 //       password,
 const registerUserValidator = validate([
-  body('givenName').isString().notEmpty().withMessage('Given name is required'),
+  body('givenName')
+    .isString()
+    .withMessage('Title must be defined of type string')
+    .notEmpty()
+    .withMessage('Given name is required'),
   body('familyName')
     .optional()
     .isString()
-    .withMessage('Family name is required'),
+    .withMessage('Title must be defined of type string'),
   body('email')
     .isString()
+    .withMessage('Title must be defined of type string')
     .isEmail()
     .withMessage('Invalid email')
     .normalizeEmail(),
   body('userName')
     .isString()
+    .withMessage('Title must be defined of type string')
     .notEmpty()
     .withMessage('Username is required')
     .matches(/^\S*$/)
@@ -25,9 +31,10 @@ const registerUserValidator = validate([
     .matches(/^[a-zA-Z0-9]*$/)
     .withMessage('Username should only contain alphanumeric characters'),
   body('password')
+    .isString()
+    .withMessage('Title must be defined of type string')
     .matches(/^\S*$/)
     .withMessage('Password should not contain spaces')
-    .isString()
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters long'),
 ]);
