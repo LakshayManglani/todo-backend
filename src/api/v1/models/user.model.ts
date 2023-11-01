@@ -28,6 +28,11 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     defaultValue: '../../public/dummy_profile_image.jpeg',
   },
+  role: {
+    type: DataTypes.STRING,
+    defaultValue: 'user',
+    allowNull: false,
+  },
 });
 
 async function register(
@@ -52,12 +57,6 @@ async function register(
     throw error;
   }
 }
-// User.truncate();
-// User.create({
-//   givenName: 'Lakshay',
-//   familyName: 'Manglani',
-//   email: 'lakshaymanglani2212@gmail.com',
-//   password: 'amio',
-//   role: 'admin',
-// });
+
 export { register };
+export default User;
