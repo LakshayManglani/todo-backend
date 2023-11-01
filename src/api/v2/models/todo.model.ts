@@ -1,6 +1,7 @@
 import { sequelize } from '../db';
 import { DataTypes } from 'sequelize';
 import { asyncHandller } from '../util/asyncHandler';
+import User from './user.model';
 
 const Todo = sequelize.define('Todo', {
   title: {
@@ -16,16 +17,21 @@ const Todo = sequelize.define('Todo', {
     defaultValue: false,
     allowNull: false,
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+  userId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
 
-async function create(title: string, description: string): Promise<object> {
+User.hasOne(Todo, { foreignKey: 'userId' });
+
+async function create(
+  title: string,
+  description: string,
+  userId: number
+): Promise<object> {
   return asyncHandller(async () => {
-    const todo = await Todo.create({ title, description });
+    const todo = await Todo.create({ title, description, userId });
     const jsonData = await todo.toJSON();
     return jsonData;
   }, 'Failed to create todo:');
@@ -101,3 +107,4 @@ export {
   toggleIsCompleteById,
   updateById,
 };
+export default Todo;
