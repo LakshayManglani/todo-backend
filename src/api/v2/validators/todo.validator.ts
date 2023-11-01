@@ -11,6 +11,11 @@ const createTodoValidator = validate([
   body('description')
     .isString()
     .withMessage('Todo Desciption must be of type string.'),
+  body('userId')
+    .notEmpty()
+    .withMessage('User Id is required')
+    .isInt()
+    .withMessage('User Id must be type int.'),
 ]);
 
 const todoByIdValidator = validate([

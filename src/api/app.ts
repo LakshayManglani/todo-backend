@@ -1,9 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-import createExpressErrorHandler from './util/expressErrorHandler';
-import ApiError from './util/apiError';
-import userRouter from './routes/user.routing';
-import todoRouter from './routes/todo.routing';
+import createExpressErrorHandler from './v2/util/expressErrorHandler';
+import ApiError from './v2/util/apiError';
+
+// api v1
+import todoRouterV1 from './v1/routes/todo.routing';
+
+// api v2
+import userRouterV2 from './v2/routes/user.routing';
+import todoRouterV2 from './v2/routes/todo.routing';
+import { apiV1, apiV2 } from './constants';
 
 const app = express();
 
@@ -34,11 +40,21 @@ function startApp() {
     })
   );
 
-  // api of user
-  app.use('/api/v1/user', userRouter());
+  // api v2
 
   // api of todo
-  app.use('/api/v1/todos', todoRouter());
+  if (apiV1) {
+    app.use('/api/v1/todos', todoRouterV1());
+  }
+
+  // api v2
+  if (apiV2) {
+    // api of user
+    app.use('/api/v2/user', userRouterV2());
+
+    // api of todo
+    app.use('/api/v2/todos', todoRouterV2());
+  }
 }
 
 export { startApp };

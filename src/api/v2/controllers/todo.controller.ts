@@ -13,12 +13,13 @@ import createExpressHandler from '../util/expressHandler';
 
 const createTodo = createExpressHandler(async (req, res) => {
   try {
-    const { title, description } = req.body as {
+    const { title, description, userId } = req.body as {
       title: string;
       description: string;
+      userId: number;
     };
 
-    const data = await create(title, description);
+    const data = await create(title, description, userId);
 
     res
       .status(201)
