@@ -10,7 +10,7 @@ const sequelize = new Sequelize({
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE_V1,
   host: MYSQL_HOST,
-  logging: false,
+  // logging: false,
 });
 
 // Function to authenticate database connection
