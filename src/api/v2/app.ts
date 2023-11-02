@@ -7,7 +7,7 @@ import todoRouter from './routes/todo.routing';
 
 const app = express();
 
-function startApp() {
+function startApp(app: any) {
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN,

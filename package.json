@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node ./src/api/v2/index.js",
     "tsc": "npx tsc --watch",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/api/v2/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/api/index.ts",
+    "single": "ts-node-dev --respawn --transpile-only",
     "lint": "npx prettier . --write"
   },
   "repository": {
