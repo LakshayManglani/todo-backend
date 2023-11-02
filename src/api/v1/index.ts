@@ -1,26 +1,33 @@
 import { config } from 'dotenv';
 
-// I have configured env varibles here so that import statements below them can get it.
-config({ path: './.env' });
+if (process.env.ENVIRONMENT === undefined) {
+  config({ path: './.env' });
+}
 
 import connectToDatabase from './db';
 import app, { startApp } from './app';
 
 const PORT = Number(process.env.PORT) || 4040;
 
-async function startServer() {
+async function startServer(app: any) {
   try {
     // First try to connect Database and after successfully connected run startApp()
     await connectToDatabase();
 
-    startApp();
+    startApp(app);
 
-    app.listen(PORT, () => {
-      console.log('\n⚙️  Server is running on port:', PORT);
-    });
+    if (process.env.ENVIRONMENT === 'production') {
+      app.listen(PORT, () => {
+        console.log('\n⚙️  Server is running on port:', PORT);
+      });
+    }
   } catch (error) {
     console.error('\nFailed to start server:', error);
   }
 }
 
-startServer();
+if (process.env.ENVIRONMENT === 'production') {
+  startServer(app);
+}
+
+export default startServer;
