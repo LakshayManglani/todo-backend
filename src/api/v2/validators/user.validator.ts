@@ -1,10 +1,6 @@
 import { body, param } from 'express-validator';
 import validate from './validate';
-// givenName,
-//       familyName,
-//       email,
-//       userName,
-//       password,
+
 const registerUserValidator = validate([
   body('givenName')
     .isString()
@@ -39,4 +35,23 @@ const registerUserValidator = validate([
     .withMessage('Password must be at least 6 characters long'),
 ]);
 
-export { registerUserValidator };
+const loginUserValidator = validate([
+  body('userName')
+    .isString()
+    .withMessage('Username must be defined of type string')
+    .notEmpty()
+    .withMessage('Username is required')
+    .matches(/^\S*$/)
+    .withMessage('Username should not contain spaces')
+    .matches(/^[a-zA-Z0-9]*$/)
+    .withMessage('Username should only contain alphanumeric characters'),
+  body('password')
+    .isString()
+    .withMessage('Password must be defined of type string')
+    .matches(/^\S*$/)
+    .withMessage('Password should not contain spaces')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters long'),
+]);
+
+export { registerUserValidator, loginUserValidator };

@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { registerUserValidator } from '../validators/user.validator';
+import {
+  loginUserValidator,
+  registerUserValidator,
+} from '../validators/user.validator';
 import {
   changeCurrentPassword,
   forgotPasswordRequest,
@@ -10,6 +13,7 @@ import {
   registerUser,
   updateUserAvatar,
 } from '../controllers/user.controller';
+import { verifyAccessToken } from '../middlewares/auth.middleware';
 
 function userRouter() {
   const router = Router();
@@ -17,14 +21,14 @@ function userRouter() {
   // Unsecured route
   router.route('/register').post(registerUserValidator, registerUser);
 
-  router.route('/login').post(loginUser);
+  router.route('/login').post(loginUserValidator, loginUser);
 
   router.route('/forgot-password').post(forgotPasswordRequest);
 
   router.route('/reset-password/:resetToken').post(resetForgottenPassword);
 
   // Secured routes
-  router.route('/logout').post(logoutUser);
+  router.route('/logout').post(verifyAccessToken, logoutUser);
 
   router.route('/avatar').patch(updateUserAvatar);
 

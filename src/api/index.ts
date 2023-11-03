@@ -13,7 +13,7 @@ const app = express();
 
 async function startAllServer() {
   try {
-    await startServerV1(app);
+    // await startServerV1(app);
     await startServerV2(app);
     app.listen(PORT, () => {
       console.log('\n⚙️  All Servers are running on port:', PORT);
