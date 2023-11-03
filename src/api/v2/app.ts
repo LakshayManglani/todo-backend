@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import createExpressErrorHandler from './util/expressErrorHandler';
 import ApiError from './util/apiError';
 import userRouter from './routes/user.routing';
@@ -14,6 +15,9 @@ function startApp(app: any) {
       credentials: true,
     })
   );
+
+  // Parse the cookie
+  app.use(cookieParser());
 
   // Parse the request body data into json format
   app.use(express.json());
@@ -35,7 +39,7 @@ function startApp(app: any) {
   );
 
   // api of user
-  app.use('/api/v2/user', userRouter());
+  app.use('/api/v2/users', userRouter());
 
   // api of todo
   app.use('/api/v2/todos', todoRouter());
