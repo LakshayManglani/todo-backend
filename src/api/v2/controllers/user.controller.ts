@@ -95,25 +95,42 @@ const resetForgottenPassword = createExpressHandler(async (req, res) => {});
 
 const registerUser = createExpressHandler(async (req, res) => {
   try {
-    const { givenName, familyName, email, userName, password } = req.body as {
-      givenName: string;
-      familyName: string;
-      email: string;
-      userName: string;
-      password: string;
-    };
+    const { givenName, familyName, email, userName, password, avatar, role } =
+      req.body as {
+        givenName: string;
+        familyName: string;
+        email: string;
+        userName: string;
+        password: string;
+        avatar: string;
+        role: string;
+      };
 
     const data = await register(
       givenName,
       familyName,
       email,
       userName,
-      password
+      password,
+      avatar,
+      role
     );
+
+    const dataToSend = {
+      id: data.id,
+      givenName: data.givenName,
+      familyName: data.familyName,
+      email: data.email,
+      userName: data.userName,
+      avatar: data.avatar,
+      role: data.role,
+    };
 
     res
       .status(201)
-      .json(new ApiResponse(201, data, 'User registered successfully', true));
+      .json(
+        new ApiResponse(201, dataToSend, 'User registered successfully', true)
+      );
   } catch (error: any) {
     console.error('Failed to register user:', error);
     const { message } = error;

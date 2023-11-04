@@ -1,57 +1,78 @@
-import { body, param } from 'express-validator';
+import { body } from 'express-validator';
 import validate from './validate';
 
 const registerUserValidator = validate([
   body('givenName')
     .isString()
-    .withMessage('Given Name must be defined of type string')
+    .withMessage('givenName must be defined of type string')
     .notEmpty()
-    .withMessage('Given name is required'),
+    .withMessage('givenName cannot be empty'),
+
   body('familyName')
     .optional()
     .isString()
-    .withMessage('Family Name must be defined of type string'),
+    .withMessage('familyName must be defined of type string'),
+
   body('email')
     .isString()
-    .withMessage('Email must be defined of type string')
+    .withMessage('email must be defined of type string')
     .isEmail()
-    .withMessage('Invalid email')
+    .withMessage('email is invalid')
     .normalizeEmail(),
+
   body('userName')
     .isString()
-    .withMessage('Username must be defined of type string')
+    .withMessage('userName must be defined of type string')
     .notEmpty()
-    .withMessage('Username is required')
+    .withMessage('userName cannot be empty')
     .matches(/^\S*$/)
-    .withMessage('Username should not contain spaces')
-    .matches(/^[a-zA-Z0-9]*$/)
-    .withMessage('Username should only contain alphanumeric characters'),
+    .withMessage('userName should not contain spaces')
+    .isLowercase()
+    .withMessage('userName must be in lowercase')
+    .matches(/^[a-z0-9]*$/)
+    .withMessage('userName should only contain alphanumeric characters')
+    .isLength({ min: 4 })
+    .withMessage('userName must be at least 4 characters long'),
+
   body('password')
     .isString()
-    .withMessage('Password must be defined of type string')
+    .withMessage('password must be defined of type string')
     .matches(/^\S*$/)
-    .withMessage('Password should not contain spaces')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters long'),
+    .withMessage('password should not contain spaces')
+    .matches(/^(?=.*[A-Z])/)
+    .withMessage('password must contains at least one uppercase character')
+    .matches(/^(?=.*[a-z])/)
+    .withMessage('password must contains at least one lowercase character')
+    .matches(/(?=.[@$!%?&])/)
+    .withMessage('password must contains at least one special character')
+    .isLength({ min: 8 })
+    .withMessage('password must be at least 8 characters long'),
 ]);
 
 const loginUserValidator = validate([
   body('userName')
     .isString()
-    .withMessage('Username must be defined of type string')
+    .withMessage('userName must be defined of type string')
     .notEmpty()
-    .withMessage('Username is required')
+    .withMessage('userName is required')
     .matches(/^\S*$/)
-    .withMessage('Username should not contain spaces')
+    .withMessage('userName should not contain spaces')
     .matches(/^[a-zA-Z0-9]*$/)
-    .withMessage('Username should only contain alphanumeric characters'),
+    .withMessage('userName should only contain alphanumeric characters'),
+
   body('password')
     .isString()
-    .withMessage('Password must be defined of type string')
+    .withMessage('password must be defined of type string')
     .matches(/^\S*$/)
-    .withMessage('Password should not contain spaces')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters long'),
+    .withMessage('password should not contain spaces')
+    .matches(/^\S*$/)
+    .withMessage('password must contains at least one uppercase character')
+    .matches(/^\S*$/)
+    .withMessage('password must contains at least one lowercase character')
+    .matches(/^\S*$/)
+    .withMessage('password must contains at least one special character')
+    .isLength({ min: 8 })
+    .withMessage('password must be at least 8 characters long'),
 ]);
 
 export { registerUserValidator, loginUserValidator };
