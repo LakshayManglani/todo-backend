@@ -28,10 +28,10 @@ const User = sequelize.define('User', {
   },
   avatar: {
     type: DataTypes.STRING,
-    defaultValue: '../../public/dummy_profile_image.jpeg',
+    defaultValue: '/dummy_profile_image.jpeg',
   },
   role: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM('user', 'admin'),
     defaultValue: 'user',
     allowNull: false,
   },
@@ -39,26 +39,39 @@ const User = sequelize.define('User', {
 
 async function register(
   givenName: string,
-  familyName: string,
+  familyName: string = '',
   email: string,
   userName: string,
-  password: string
-): Promise<object> {
+  password: string,
+  avatar: string = '/dummy_profile_image.jpeg',
+  role: string = 'user'
+): Promise<{
+  id: number;
+  givenName: string;
+  familyName: string;
+  email: string;
+  userName: string;
+  password: string;
+  avatar: string;
+  role: string;
+}> {
   try {
     const salt = bcrypt.genSaltSync(Number(process.env.SALT_ROUNDS));
     const hashedPassword = bcrypt.hashSync(password, salt);
 
-    await User.create({
+    const user = await User.create({
       givenName,
       familyName,
       email,
       userName,
       password: hashedPassword,
+      avatar,
+      role,
     });
 
-    return { givenName, familyName, email, userName };
+    return await user.toJSON();
   } catch (error) {
-    console.error('Failed to register User', error);
+    console.error('Failed to register user', error);
     throw error;
   }
 }

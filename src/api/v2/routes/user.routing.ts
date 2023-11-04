@@ -3,6 +3,7 @@ import {
   loginUserValidator,
   registerUserValidator,
 } from '../validators/user.validator';
+import { verifyAccessToken } from '../middlewares/auth.middleware';
 import {
   changeCurrentPassword,
   forgotPasswordRequest,
@@ -13,7 +14,6 @@ import {
   registerUser,
   updateUserAvatar,
 } from '../controllers/user.controller';
-import { verifyAccessToken } from '../middlewares/auth.middleware';
 
 function userRouter() {
   const router = Router();
