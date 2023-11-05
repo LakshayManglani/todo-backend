@@ -1,25 +1,29 @@
 import { body } from 'express-validator';
 import validate from './validate';
 
-const registerUserValidator = validate([
+const givenName = () =>
   body('givenName')
     .isString()
     .withMessage('givenName must be defined of type string')
     .notEmpty()
-    .withMessage('givenName cannot be empty'),
+    .withMessage('givenName cannot be empty');
 
+const familyName = () =>
   body('familyName')
     .optional()
     .isString()
-    .withMessage('familyName must be defined of type string'),
+    .withMessage('familyName must be defined of type string');
 
+const email = () =>
   body('email')
     .isString()
     .withMessage('email must be defined of type string')
+    .notEmpty()
+    .withMessage('email cannot be empty')
     .isEmail()
-    .withMessage('email is invalid')
-    .normalizeEmail(),
+    .withMessage('email must be a valid email');
 
+const userName = () =>
   body('userName')
     .isString()
     .withMessage('userName must be defined of type string')
@@ -32,8 +36,9 @@ const registerUserValidator = validate([
     .matches(/^[a-z0-9]*$/)
     .withMessage('userName should only contain alphanumeric characters')
     .isLength({ min: 4 })
-    .withMessage('userName must be at least 4 characters long'),
+    .withMessage('userName must be at least 4 characters long');
 
+const password = () =>
   body('password')
     .isString()
     .withMessage('password must be defined of type string')
@@ -46,33 +51,16 @@ const registerUserValidator = validate([
     .matches(/(?=.[@$!%?&])/)
     .withMessage('password must contains at least one special character')
     .isLength({ min: 8 })
-    .withMessage('password must be at least 8 characters long'),
+    .withMessage('password must be at least 8 characters long');
+
+const registerUserValidator = validate([
+  givenName(),
+  familyName(),
+  email(),
+  userName(),
+  password(),
 ]);
 
-const loginUserValidator = validate([
-  body('userName')
-    .isString()
-    .withMessage('userName must be defined of type string')
-    .notEmpty()
-    .withMessage('userName is required')
-    .matches(/^\S*$/)
-    .withMessage('userName should not contain spaces')
-    .matches(/^[a-zA-Z0-9]*$/)
-    .withMessage('userName should only contain alphanumeric characters'),
-
-  body('password')
-    .isString()
-    .withMessage('password must be defined of type string')
-    .matches(/^\S*$/)
-    .withMessage('password should not contain spaces')
-    .matches(/^\S*$/)
-    .withMessage('password must contains at least one uppercase character')
-    .matches(/^\S*$/)
-    .withMessage('password must contains at least one lowercase character')
-    .matches(/^\S*$/)
-    .withMessage('password must contains at least one special character')
-    .isLength({ min: 8 })
-    .withMessage('password must be at least 8 characters long'),
-]);
+const loginUserValidator = validate([userName(), password()]);
 
 export { registerUserValidator, loginUserValidator };
