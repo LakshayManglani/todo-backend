@@ -3,6 +3,7 @@ import {
   deleteAll,
   deleteById,
   getAll,
+  getAllByUserId,
   getById,
   toggleIsCompleteById,
   updateById,
@@ -33,7 +34,9 @@ const createTodo = createExpressHandler(async (req, res) => {
 
 const getAllTodos = createExpressHandler(async (req, res) => {
   try {
-    const data = await getAll();
+    const { id } = req.body;
+
+    const data = await getAllByUserId(id);
 
     res
       .status(200)

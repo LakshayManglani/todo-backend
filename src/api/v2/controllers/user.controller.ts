@@ -47,12 +47,22 @@ const loginUser = createExpressHandler(async (req, res) => {
       return;
     }
 
+    const userDto = {
+      id: user.id,
+      givenName: user.givenName,
+      familyName: user.familyName,
+      email: user.email,
+      userName: user.userName,
+      avatar: user.avatar,
+      role: user.role,
+    };
+
     const accessToken = await generateAccessToken(user);
 
     res
       .status(200)
       .cookie('accessToken', accessToken)
-      .json(new ApiResponse(200, user, 'User logged in successfully', true));
+      .json(new ApiResponse(200, userDto, 'User logged in successfully', true));
   } catch (error: any) {
     console.error('Failed to login user:', error);
     const { message } = error;
@@ -80,10 +90,22 @@ const logoutUser = createExpressHandler(async (req, res) => {
       return;
     }
 
+    const userDto = {
+      id: user.id,
+      givenName: user.givenName,
+      familyName: user.familyName,
+      email: user.email,
+      userName: user.userName,
+      avatar: user.avatar,
+      role: user.role,
+    };
+
     res
       .status(200)
       .clearCookie('accessToken')
-      .json(new ApiResponse(200, user, 'User logeed out successfully', true));
+      .json(
+        new ApiResponse(200, userDto, 'User logeed out successfully', true)
+      );
   } catch (error: any) {
     console.error('Failed to logout user:', error);
     const { message } = error;
@@ -106,7 +128,7 @@ const registerUser = createExpressHandler(async (req, res) => {
         role: string;
       };
 
-    const data = await register(
+    const user = await register(
       givenName,
       familyName,
       email,
@@ -116,20 +138,20 @@ const registerUser = createExpressHandler(async (req, res) => {
       role
     );
 
-    const dataToSend = {
-      id: data.id,
-      givenName: data.givenName,
-      familyName: data.familyName,
-      email: data.email,
-      userName: data.userName,
-      avatar: data.avatar,
-      role: data.role,
+    const userDto = {
+      id: user.id,
+      givenName: user.givenName,
+      familyName: user.familyName,
+      email: user.email,
+      userName: user.userName,
+      avatar: user.avatar,
+      role: user.role,
     };
 
     res
       .status(201)
       .json(
-        new ApiResponse(201, dataToSend, 'User registered successfully', true)
+        new ApiResponse(201, userDto, 'User registered successfully', true)
       );
   } catch (error: any) {
     console.error('Failed to register user:', error);

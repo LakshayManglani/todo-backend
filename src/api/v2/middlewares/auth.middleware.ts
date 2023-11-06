@@ -25,12 +25,11 @@ const verifyAccessToken = createExpressHandler(async (req, res, next) => {
         }
 
         req.body.userName = decoded.userName;
+        req.body.id = decoded.id;
+
+        next();
       }
     );
-
-    if (req.body.userName) {
-      next();
-    }
 
     return;
   } catch (error: any) {

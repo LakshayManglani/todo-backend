@@ -44,6 +44,13 @@ async function getAll(): Promise<object[]> {
   }, 'Failed to getAll todos:');
 }
 
+async function getAllByUserId(id: number) {
+  return asyncHandller(async () => {
+    const todos = await Todo.findAll({ where: { userId: id } });
+    return todos;
+  }, 'Failed to getById:');
+}
+
 async function getById(id: number): Promise<object> {
   return asyncHandller(async () => {
     const todo = await Todo.findByPk(id);
@@ -101,6 +108,7 @@ async function updateById(
 export {
   create,
   getAll,
+  getAllByUserId,
   getById,
   deleteAll,
   deleteById,

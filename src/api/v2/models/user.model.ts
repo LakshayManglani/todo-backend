@@ -76,7 +76,16 @@ async function register(
   }
 }
 
-async function getByUsername(userName: string): Promise<object | null> {
+async function getByUsername(userName: string): Promise<{
+  id: number;
+  givenName: string;
+  familyName: string;
+  email: string;
+  userName: string;
+  password: string;
+  avatar: string;
+  role: string;
+} | null> {
   try {
     const user = await User.findOne({ where: { userName } });
 
@@ -84,9 +93,9 @@ async function getByUsername(userName: string): Promise<object | null> {
       return null;
     }
 
-    const { givenName, familyName, email } = await user.toJSON();
+    const dataToJson = await user.toJSON();
 
-    return { givenName, familyName, email, userName };
+    return dataToJson;
   } catch (error) {
     console.error('Failed to get User', error);
     throw error;
@@ -112,11 +121,26 @@ async function isPasswordCorrect(
   }
 }
 
-async function generateAccessToken(user: object): Promise<string> {
+async function generateAccessToken(user: {
+  id: number;
+  givenName: string;
+  familyName: string;
+  email: string;
+  userName: string;
+  password: string;
+  avatar: string;
+  role: string;
+}): Promise<string> {
   try {
-    return jwt.sign(user, String(process.env.ACCESS_TOKEN_SECRET), {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-    });
+    const { id, email, userName, password } = user;
+
+    return jwt.sign(
+      { id, email, userName, password },
+      String(process.env.ACCESS_TOKEN_SECRET),
+      {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+      }
+    );
   } catch (error) {
     console.error('Failed to generate access token', error);
     throw error;
