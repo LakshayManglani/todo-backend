@@ -13,6 +13,7 @@ import {
   deleteTodoById,
   toggleTodoDoneStatus,
 } from '../controllers/todo.controller';
+import { verifyAccessToken } from '../middlewares/auth.middleware';
 
 function todoRouter() {
   const router = Router();
@@ -20,7 +21,7 @@ function todoRouter() {
   router
     .route('/')
     .post(createTodoValidator, createTodo)
-    .get(getAllTodos)
+    .get(verifyAccessToken, getAllTodos)
     .delete(deleteAllTodos);
 
   router
