@@ -3,7 +3,6 @@ import {
   deleteAll,
   deleteById,
   getAll,
-  getAllByUserId,
   getById,
   toggleIsCompleteById,
   updateById,
@@ -34,9 +33,9 @@ const createTodo = createExpressHandler(async (req, res) => {
 
 const getAllTodos = createExpressHandler(async (req, res) => {
   try {
-    const { id } = req.body;
+    const { userId } = req.body;
 
-    const data = await getAllByUserId(id);
+    const data = await getAll(userId);
 
     res
       .status(200)
@@ -50,15 +49,16 @@ const getAllTodos = createExpressHandler(async (req, res) => {
 
 const getTodoById = createExpressHandler(async (req, res) => {
   try {
-    let { todoId } = req.params;
+    const { todoId } = req.params;
+    const { userId } = req.body;
 
-    const data = await getById(Number(todoId));
+    const data = await getById(Number(userId), Number(todoId));
 
     if (!data) {
       res
         .status(404)
         .json(
-          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, true)
+          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, false)
         );
       return;
     }
@@ -75,19 +75,26 @@ const getTodoById = createExpressHandler(async (req, res) => {
 
 const updateTodoById = createExpressHandler(async (req, res) => {
   try {
-    let { todoId } = req.params;
+    const { todoId } = req.params;
+    const { userId } = req.body;
+
     const { title, description } = req.body as {
       title: string;
       description: string;
     };
 
-    const affectedRows = await updateById(Number(todoId), title, description);
+    const affectedRows = await updateById(
+      Number(userId),
+      Number(todoId),
+      title,
+      description
+    );
 
     if (affectedRows === 0) {
       res
         .status(404)
         .json(
-          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, true)
+          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, false)
         );
       return;
     }
@@ -111,15 +118,16 @@ const updateTodoById = createExpressHandler(async (req, res) => {
 
 const deleteTodoById = createExpressHandler(async (req, res) => {
   try {
-    let { todoId } = req.params;
+    const { todoId } = req.params;
+    const { userId } = req.body;
 
-    const data = await deleteById(Number(todoId));
+    const data = await deleteById(Number(userId), Number(todoId));
 
     if (data === 0) {
       res
         .status(404)
         .json(
-          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, true)
+          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, false)
         );
       return;
     }
@@ -143,7 +151,9 @@ const deleteTodoById = createExpressHandler(async (req, res) => {
 
 const deleteAllTodos = createExpressHandler(async (req, res) => {
   try {
-    const data = await deleteAll();
+    const { userId } = req.body;
+
+    const data = await deleteAll(userId);
 
     res
       .status(200)
@@ -166,15 +176,19 @@ const deleteAllTodos = createExpressHandler(async (req, res) => {
 
 const toggleTodoDoneStatus = createExpressHandler(async (req, res) => {
   try {
-    let { todoId } = req.params;
+    const { todoId } = req.params;
+    const { userId } = req.body;
 
-    const isComplete = await toggleIsCompleteById(Number(todoId));
+    const isComplete = await toggleIsCompleteById(
+      Number(userId),
+      Number(todoId)
+    );
 
     if (isComplete === null) {
       res
         .status(404)
         .json(
-          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, true)
+          new ApiResponse(404, null, `Todo with ID ${todoId} not found.`, false)
         );
       return;
     }

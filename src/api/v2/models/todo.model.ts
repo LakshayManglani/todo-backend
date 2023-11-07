@@ -37,59 +37,54 @@ async function create(
   }, 'Failed to create todo:');
 }
 
-async function getAll(): Promise<object[]> {
+async function getAll(userId: number) {
   return asyncHandller(async () => {
-    const todos = await Todo.findAll();
+    const todos = await Todo.findAll({ where: { userId } });
     return todos;
   }, 'Failed to getAll todos:');
 }
 
-async function getAllByUserId(id: number) {
+async function getById(userId: number, id: number): Promise<object | null> {
   return asyncHandller(async () => {
-    const todos = await Todo.findAll({ where: { userId: id } });
-    return todos;
-  }, 'Failed to getById:');
-}
+    const todo = await Todo.findOne({ where: { userId, id } });
 
-async function getById(id: number): Promise<object> {
-  return asyncHandller(async () => {
-    const todo = await Todo.findByPk(id);
     return todo;
   }, 'Failed to getById:');
 }
 
-async function deleteAll(): Promise<number> {
+async function deleteAll(userId: number): Promise<number> {
   return asyncHandller(async () => {
-    const todoCount = await Todo.count();
-    if (todoCount > 0) {
-      await Todo.truncate();
-    }
+    const todoCount = await Todo.destroy({ where: { userId } });
     return todoCount;
   }, 'Failed to deleteAll todos:');
 }
 
-async function deleteById(id: number): Promise<number> {
+async function deleteById(userId: number, id: number): Promise<number> {
   return asyncHandller(async () => {
-    const deletedRows = await Todo.destroy({ where: { id } });
+    const deletedRows = await Todo.destroy({ where: { userId, id } });
     return deletedRows;
   }, 'Failed to deleteById: ');
 }
 
-async function toggleIsCompleteById(id: number): Promise<boolean | null> {
+async function toggleIsCompleteById(
+  userId: number,
+  id: number
+): Promise<boolean | null> {
   return asyncHandller(async () => {
-    const todo = await Todo.findByPk(id);
+    const todo = await Todo.findOne({ where: { userId, id } });
     if (!todo) {
       return null;
     }
 
     const { isComplete } = todo.dataValues;
 
-    await Todo.update({ isComplete: !isComplete }, { where: { id } });
+    await Todo.update({ isComplete: !isComplete }, { where: { userId, id } });
     return !isComplete;
   }, 'Failed to toggleIsCompleteById: ');
 }
 
 async function updateById(
+  userId: number,
   id: number,
   upTitle: string,
   upDescription: string
@@ -98,7 +93,7 @@ async function updateById(
     // Perform the update operation
     const affectedRows = await Todo.update(
       { title: upTitle, description: upDescription },
-      { where: { id } }
+      { where: { userId, id } }
     );
 
     return affectedRows[0];
@@ -108,7 +103,6 @@ async function updateById(
 export {
   create,
   getAll,
-  getAllByUserId,
   getById,
   deleteAll,
   deleteById,
