@@ -18,10 +18,13 @@ import { verifyAccessToken } from '../middlewares/auth.middleware';
 function todoRouter() {
   const router = Router();
 
+  // Auth middleware to check the access token
+  router.use(verifyAccessToken);
+
   router
     .route('/')
     .post(createTodoValidator, createTodo)
-    .get(verifyAccessToken, getAllTodos)
+    .get(getAllTodos)
     .delete(deleteAllTodos);
 
   router
