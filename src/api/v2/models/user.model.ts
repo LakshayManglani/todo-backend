@@ -76,6 +76,32 @@ async function register(
   }
 }
 
+async function getByUserId(userId: number): Promise<{
+  id: number;
+  givenName: string;
+  familyName: string;
+  email: string;
+  userName: string;
+  password: string;
+  avatar: string;
+  role: string;
+} | null> {
+  try {
+    const user = await User.findOne({ where: { id: userId } });
+
+    if (!user) {
+      return null;
+    }
+
+    const dataToJson = await user.toJSON();
+
+    return dataToJson;
+  } catch (error) {
+    console.error('Failed to get User', error);
+    throw error;
+  }
+}
+
 async function getByUsername(userName: string): Promise<{
   id: number;
   givenName: string;
@@ -147,5 +173,50 @@ async function generateAccessToken(user: {
   }
 }
 
-export { register, getByUsername, isPasswordCorrect, generateAccessToken };
+async function updatePasswordById(
+  userId: number,
+  newPassword: string
+): Promise<number> {
+  try {
+    const salt = bcrypt.genSaltSync(Number(process.env.SALT_ROUNDS));
+    const hashedPassword = bcrypt.hashSync(newPassword, salt);
+
+    const affectedRows = await User.update(
+      { password: hashedPassword },
+      { where: { id: userId } }
+    );
+
+    return affectedRows[0];
+  } catch (error) {
+    console.error('Failed to update password', error);
+    throw error;
+  }
+}
+
+async function updateAvatarById(
+  userId: number,
+  avatarUrl: string
+): Promise<number> {
+  try {
+    const affectedRows = await User.update(
+      { avatar: avatarUrl },
+      { where: { id: userId } }
+    );
+
+    return affectedRows[0];
+  } catch (error) {
+    console.error('Failed to update avatar', error);
+    throw error;
+  }
+}
+
+export {
+  register,
+  getByUsername,
+  getByUserId,
+  isPasswordCorrect,
+  generateAccessToken,
+  updatePasswordById,
+  updateAvatarById,
+};
 export default User;
