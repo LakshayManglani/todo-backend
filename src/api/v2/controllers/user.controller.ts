@@ -3,14 +3,63 @@ import ApiError from '../util/apiError';
 import ApiResponse from '../util/apiResponse';
 import {
   generateAccessToken,
+  getByUserId,
   getByUsername,
   isPasswordCorrect,
   register,
+  updateAvatarById,
+  updatePasswordById,
 } from '../models/user.model';
 
-const changeCurrentPassword = createExpressHandler(async (req, res) => {});
+const changeCurrentPassword = createExpressHandler(async (req, res) => {
+  try {
+    const { decodedUserName, oldPassword, newPassword, decodedUserId } =
+      req.body as {
+        decodedUserName: string;
+        oldPassword: string;
+        newPassword: string;
+        decodedUserId: number;
+      };
 
-const forgotPasswordRequest = createExpressHandler(async (req, res) => {});
+    const user = await getByUsername(decodedUserName);
+
+    if (!user) {
+      res
+        .status(404)
+        .json(
+          new ApiResponse(
+            404,
+            null,
+            `User with username ${decodedUserName} not found.`,
+            false
+          )
+        );
+      return;
+    }
+
+    const isValidPassword = await isPasswordCorrect(
+      decodedUserName,
+      oldPassword
+    );
+    if (!isValidPassword) {
+      res
+        .status(400)
+        .json(new ApiResponse(400, null, `Invalid old Password.`, false));
+      return;
+    }
+
+    await updatePasswordById(Number(decodedUserId), newPassword);
+
+    res
+      .status(200)
+      .clearCookie('accessToken')
+      .json(new ApiResponse(200, null, 'Password changed successfully', true));
+  } catch (error: any) {
+    console.error('Failed to change Password:', error);
+    const { message } = error;
+    res.status(500).json(new ApiError(500, error, false, message));
+  }
+});
 
 const handleSocialLogin = createExpressHandler(async (req, res) => {});
 
@@ -31,7 +80,7 @@ const loginUser = createExpressHandler(async (req, res) => {
             404,
             null,
             `User with username ${userName} not found.`,
-            true
+            false
           )
         );
       return;
@@ -42,7 +91,7 @@ const loginUser = createExpressHandler(async (req, res) => {
       res
         .status(401)
         .json(
-          new ApiResponse(401, null, `User password does not match.`, true)
+          new ApiResponse(401, null, `User password does not match.`, false)
         );
       return;
     }
@@ -72,9 +121,9 @@ const loginUser = createExpressHandler(async (req, res) => {
 
 const logoutUser = createExpressHandler(async (req, res) => {
   try {
-    const { userName } = req.body;
+    const { decodedUserName } = req.body;
 
-    const user = await getByUsername(userName);
+    const user = await getByUsername(decodedUserName);
 
     if (!user) {
       res
@@ -83,8 +132,8 @@ const logoutUser = createExpressHandler(async (req, res) => {
           new ApiResponse(
             404,
             null,
-            `User with username ${userName} not found.`,
-            true
+            `User with username ${decodedUserName} not found.`,
+            false
           )
         );
       return;
@@ -112,8 +161,6 @@ const logoutUser = createExpressHandler(async (req, res) => {
     res.status(500).json(new ApiError(500, error, false, message));
   }
 });
-
-const resetForgottenPassword = createExpressHandler(async (req, res) => {});
 
 const registerUser = createExpressHandler(async (req, res) => {
   try {
@@ -160,15 +207,41 @@ const registerUser = createExpressHandler(async (req, res) => {
   }
 });
 
-const updateUserAvatar = createExpressHandler(async (req, res) => {});
+const updateUserAvatar = createExpressHandler(async (req, res) => {
+  try {
+    const { decodedUserId, avatarUrl } = req.body as {
+      decodedUserId: number;
+      avatarUrl: string;
+    };
+
+    const user = await getByUserId(decodedUserId);
+
+    if (!user) {
+      res
+        .status(404)
+        .json(new ApiResponse(404, null, `User not found.`, false));
+      return;
+    }
+
+    await updateAvatarById(decodedUserId, avatarUrl);
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, { avatarUrl }, 'Avatar changed successfully', true)
+      );
+  } catch (error: any) {
+    console.error('Failed to change avatar:', error);
+    const { message } = error;
+    res.status(500).json(new ApiError(500, error, false, message));
+  }
+});
 
 export {
   changeCurrentPassword,
-  forgotPasswordRequest,
   handleSocialLogin,
   loginUser,
   logoutUser,
-  resetForgottenPassword,
   registerUser,
   updateUserAvatar,
 };

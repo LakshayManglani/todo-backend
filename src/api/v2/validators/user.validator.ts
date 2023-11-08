@@ -8,6 +8,15 @@ const givenName = () =>
     .notEmpty()
     .withMessage('givenName cannot be empty');
 
+const avatarUrl = () =>
+  body('avatarUrl')
+    .isString()
+    .withMessage('avatarUrl must be defined of type string')
+    .isURL()
+    .withMessage('avatarUrl must be a valid url')
+    .notEmpty()
+    .withMessage('avatarUrl cannot be empty');
+
 const familyName = () =>
   body('familyName')
     .optional()
@@ -38,29 +47,41 @@ const userName = () =>
     .isLength({ min: 4 })
     .withMessage('userName must be at least 4 characters long');
 
-const password = () =>
-  body('password')
+const password = (field: string) =>
+  body(field)
     .isString()
-    .withMessage('password must be defined of type string')
+    .withMessage(`${field} must be defined of type string`)
     .matches(/^\S*$/)
-    .withMessage('password should not contain spaces')
+    .withMessage(`${field} should not contain spaces`)
     .matches(/^(?=.*[A-Z])/)
-    .withMessage('password must contains at least one uppercase character')
+    .withMessage(`${field} must contains at least one uppercase character`)
     .matches(/^(?=.*[a-z])/)
-    .withMessage('password must contains at least one lowercase character')
+    .withMessage(`${field} must contains at least one lowercase character`)
     .matches(/(?=.[@$!%?&])/)
-    .withMessage('password must contains at least one special character')
+    .withMessage(`${field} must contains at least one special character`)
     .isLength({ min: 8 })
-    .withMessage('password must be at least 8 characters long');
+    .withMessage(`${field} must be at least 8 characters long`);
 
 const registerUserValidator = validate([
   givenName(),
   familyName(),
   email(),
   userName(),
-  password(),
+  password('password'),
 ]);
 
-const loginUserValidator = validate([userName(), password()]);
+const loginUserValidator = validate([userName(), password('password')]);
 
-export { registerUserValidator, loginUserValidator };
+const updateAvatarUserValidator = validate([avatarUrl()]);
+
+const changePasswordUserValidator = validate([
+  password('oldPassword'),
+  password('newPassword'),
+]);
+
+export {
+  registerUserValidator,
+  loginUserValidator,
+  updateAvatarUserValidator,
+  changePasswordUserValidator,
+};

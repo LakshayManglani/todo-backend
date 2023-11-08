@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import {
+  changePasswordUserValidator,
   loginUserValidator,
   registerUserValidator,
+  updateAvatarUserValidator,
 } from '../validators/user.validator';
 import { verifyAccessToken } from '../middlewares/auth.middleware';
 import {
   changeCurrentPassword,
-  forgotPasswordRequest,
   handleSocialLogin,
   loginUser,
   logoutUser,
-  resetForgottenPassword,
   registerUser,
   updateUserAvatar,
 } from '../controllers/user.controller';
@@ -23,16 +23,20 @@ function userRouter() {
 
   router.route('/login').post(loginUserValidator, loginUser);
 
-  router.route('/forgot-password').post(forgotPasswordRequest);
-
-  router.route('/reset-password/:resetToken').post(resetForgottenPassword);
-
   // Secured routes
   router.route('/logout').post(verifyAccessToken, logoutUser);
 
-  router.route('/avatar').patch(updateUserAvatar);
+  router
+    .route('/avatar')
+    .patch(verifyAccessToken, updateAvatarUserValidator, updateUserAvatar);
 
-  router.route('/change-password').post(changeCurrentPassword);
+  router
+    .route('/change-password')
+    .post(
+      verifyAccessToken,
+      changePasswordUserValidator,
+      changeCurrentPassword
+    );
 
   // SSO routes
   router.route('/google').get();
