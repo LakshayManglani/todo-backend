@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport, { use } from 'passport';
 import createExpressErrorHandler from './util/expressErrorHandler';
 import ApiError from './util/apiError';
 import userRouter from './routes/user.routing';
@@ -37,6 +39,16 @@ function startApp(app: any) {
       }
     })
   );
+
+  app.use(
+    session({
+      secret: String(process.env.EXPRESS_SESSION_SECRET),
+      resave: true,
+      saveUninitialized: true,
+    })
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   // api of user
   app.use('/api/v2/users', userRouter());

@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import passport from 'passport';
+import google from 'passport-google-oauth20';
 import {
   changePasswordUserValidator,
   loginUserValidator,
@@ -39,11 +41,38 @@ function userRouter() {
     );
 
   // SSO routes
-  router.route('/google').get();
+  passport.use(
+    new google.Strategy(
+      {
+        clientID: String(process.env.GOOGLE_CLIENT_ID),
+        clientSecret: String(process.env.GOOGLE_CLIENT_SECRET),
+        callbackURL: 'http://localhost:5050/api/v2/users/google/callback',
+      },
+      (accessToken, refreshToken, profile, done) => {
+        // Use the profile information (e.g., profile.id, profile.displayName) to create or log in the user.
+        return done(null, profile);
+      }
+    )
+  );
+
+  // Serialize and deserialize user for sessions
+  passport.serializeUser((user, done) => done(null, user));
+  passport.deserializeUser((obj: Express.User, done) => done(null, obj));
+
+  router.route('/google').get(
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+    }),
+    (req, res) => {
+      res.send('redirecting to google...');
+    }
+  );
 
   router.route('/github').get();
 
-  router.route('/google/callback').get(handleSocialLogin);
+  router
+    .route('/google/callback')
+    .get(passport.authenticate('google'), handleSocialLogin);
 
   router.route('/github/callback').get(handleSocialLogin);
 
