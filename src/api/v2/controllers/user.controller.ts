@@ -3,6 +3,7 @@ import ApiError from '../util/apiError';
 import ApiResponse from '../util/apiResponse';
 import {
   generateAccessToken,
+  getByEmail,
   getByUserId,
   getByUsername,
   isPasswordCorrect,
@@ -37,6 +38,13 @@ const changeCurrentPassword = createExpressHandler(async (req, res) => {
       return;
     }
 
+    if (user.loginType != 'local') {
+      res
+        .status(400)
+        .json(new ApiResponse(400, null, `Invalid login type.`, false));
+      return;
+    }
+
     const isValidPassword = await isPasswordCorrect(
       decodedUserName,
       oldPassword
@@ -61,7 +69,78 @@ const changeCurrentPassword = createExpressHandler(async (req, res) => {
   }
 });
 
-const handleSocialLogin = createExpressHandler(async (req, res) => {});
+const handleSocialLogin = createExpressHandler(async (req, res) => {
+  try {
+    const { name, displayName, emails, photos, provider } = req.user as {
+      name: {
+        familyName: string;
+        givenName: string;
+      };
+      displayName: string;
+      emails: [{ value: string; verified: boolean }];
+      photos: [{ value: string }];
+      provider: string;
+    };
+
+    const userName = displayName.toLowerCase().replace(' ', '');
+
+    const user = await getByUsername(userName);
+
+    if (user) {
+      const userDto = {
+        id: user.id,
+        givenName: user.givenName,
+        familyName: user.familyName,
+        email: user.email,
+        userName: user.userName,
+        avatar: user.avatar,
+        role: user.role,
+      };
+
+      const accessToken = await generateAccessToken(user);
+
+      res
+        .status(200)
+        .cookie('accessToken', accessToken)
+        .json(
+          new ApiResponse(200, userDto, 'User logged in successfully', true)
+        );
+      return;
+    }
+
+    const registerUser = await register(
+      name.givenName,
+      name.familyName,
+      emails[0].value,
+      userName,
+      '',
+      photos[0].value,
+      'user',
+      provider
+    );
+
+    const userDto = {
+      id: registerUser.id,
+      givenName: registerUser.givenName,
+      familyName: registerUser.familyName,
+      email: registerUser.email,
+      userName: registerUser.userName,
+      avatar: registerUser.avatar,
+      role: registerUser.role,
+    };
+
+    const accessToken = await generateAccessToken(registerUser);
+
+    res
+      .status(200)
+      .cookie('accessToken', accessToken)
+      .json(new ApiResponse(200, userDto, 'User logged in successfully', true));
+  } catch (error: any) {
+    console.error('Failed to login user:', error);
+    const { message } = error;
+    res.status(500).json(new ApiError(500, error, false, message));
+  }
+});
 
 const loginUser = createExpressHandler(async (req, res) => {
   try {
@@ -74,10 +153,10 @@ const loginUser = createExpressHandler(async (req, res) => {
 
     if (!user) {
       res
-        .status(404)
+        .status(409)
         .json(
           new ApiResponse(
-            404,
+            409,
             null,
             `User with username ${userName} not found.`,
             false
@@ -175,6 +254,37 @@ const registerUser = createExpressHandler(async (req, res) => {
         role: string;
       };
 
+    let userExists = await getByUsername(userName);
+    if (userExists) {
+      res
+        .status(409)
+        .json(
+          new ApiResponse(
+            409,
+            null,
+            `User with username ${userName} already exists.`,
+            false
+          )
+        );
+      return;
+    }
+
+    userExists = await getByEmail(email);
+
+    if (userExists) {
+      res
+        .status(409)
+        .json(
+          new ApiResponse(
+            409,
+            null,
+            `User with email ${email} already exists.`,
+            false
+          )
+        );
+      return;
+    }
+
     const user = await register(
       givenName,
       familyName,
@@ -182,7 +292,8 @@ const registerUser = createExpressHandler(async (req, res) => {
       userName,
       password,
       avatar,
-      role
+      role,
+      'local'
     );
 
     const userDto = {

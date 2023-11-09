@@ -24,7 +24,6 @@ const User = sequelize.define('User', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false,
   },
   avatar: {
     type: DataTypes.STRING,
@@ -33,6 +32,11 @@ const User = sequelize.define('User', {
   role: {
     type: DataTypes.ENUM('user', 'admin'),
     defaultValue: 'user',
+    allowNull: false,
+  },
+  loginType: {
+    type: DataTypes.ENUM('local', 'google'),
+    defaultValue: 'local',
     allowNull: false,
   },
 });
@@ -44,7 +48,8 @@ async function register(
   userName: string,
   password: string,
   avatar: string = '/dummy_profile_image.jpeg',
-  role: string = 'user'
+  role: string = 'user',
+  loginType: string
 ): Promise<{
   id: number;
   givenName: string;
@@ -54,6 +59,7 @@ async function register(
   password: string;
   avatar: string;
   role: string;
+  loginType: string;
 }> {
   try {
     const salt = bcrypt.genSaltSync(Number(process.env.SALT_ROUNDS));
@@ -67,6 +73,7 @@ async function register(
       password: hashedPassword,
       avatar,
       role,
+      loginType,
     });
 
     return await user.toJSON();
@@ -85,6 +92,7 @@ async function getByUserId(userId: number): Promise<{
   password: string;
   avatar: string;
   role: string;
+  loginType: string;
 } | null> {
   try {
     const user = await User.findOne({ where: { id: userId } });
@@ -111,9 +119,37 @@ async function getByUsername(userName: string): Promise<{
   password: string;
   avatar: string;
   role: string;
+  loginType: string;
 } | null> {
   try {
     const user = await User.findOne({ where: { userName } });
+
+    if (!user) {
+      return null;
+    }
+
+    const dataToJson = await user.toJSON();
+
+    return dataToJson;
+  } catch (error) {
+    console.error('Failed to get User', error);
+    throw error;
+  }
+}
+
+async function getByEmail(email: string): Promise<{
+  id: number;
+  givenName: string;
+  familyName: string;
+  email: string;
+  userName: string;
+  password: string;
+  avatar: string;
+  role: string;
+  loginType: string;
+} | null> {
+  try {
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
       return null;
@@ -218,5 +254,6 @@ export {
   generateAccessToken,
   updatePasswordById,
   updateAvatarById,
+  getByEmail,
 };
 export default User;
