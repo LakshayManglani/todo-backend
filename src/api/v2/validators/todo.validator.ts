@@ -11,7 +11,7 @@ const createTodoValidator = validate([
   body('description')
     .isString()
     .withMessage('Todo Desciption must be of type string.'),
-  body('userId')
+  body('decodedUserId')
     .notEmpty()
     .withMessage('User Id is required')
     .isInt()
