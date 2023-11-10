@@ -13,13 +13,13 @@ import createExpressHandler from '../util/expressHandler';
 
 const createTodo = createExpressHandler(async (req, res) => {
   try {
-    const { title, description, userId } = req.body as {
+    const { title, description, decodedUserId } = req.body as {
       title: string;
       description: string;
-      userId: number;
+      decodedUserId: number;
     };
 
-    const data = await create(title, description, userId);
+    const data = await create(title, description, decodedUserId);
 
     res
       .status(201)
@@ -33,9 +33,9 @@ const createTodo = createExpressHandler(async (req, res) => {
 
 const getAllTodos = createExpressHandler(async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { decodedUserId } = req.body;
 
-    const data = await getAll(userId);
+    const data = await getAll(decodedUserId);
 
     res
       .status(200)
@@ -50,9 +50,9 @@ const getAllTodos = createExpressHandler(async (req, res) => {
 const getTodoById = createExpressHandler(async (req, res) => {
   try {
     const { todoId } = req.params;
-    const { userId } = req.body;
+    const { decodedUserId } = req.body;
 
-    const data = await getById(Number(userId), Number(todoId));
+    const data = await getById(Number(decodedUserId), Number(todoId));
 
     if (!data) {
       res
@@ -76,7 +76,7 @@ const getTodoById = createExpressHandler(async (req, res) => {
 const updateTodoById = createExpressHandler(async (req, res) => {
   try {
     const { todoId } = req.params;
-    const { userId } = req.body;
+    const { decodedUserId } = req.body;
 
     const { title, description } = req.body as {
       title: string;
@@ -84,7 +84,7 @@ const updateTodoById = createExpressHandler(async (req, res) => {
     };
 
     const affectedRows = await updateById(
-      Number(userId),
+      Number(decodedUserId),
       Number(todoId),
       title,
       description
@@ -119,9 +119,9 @@ const updateTodoById = createExpressHandler(async (req, res) => {
 const deleteTodoById = createExpressHandler(async (req, res) => {
   try {
     const { todoId } = req.params;
-    const { userId } = req.body;
+    const { decodedUserId } = req.body;
 
-    const data = await deleteById(Number(userId), Number(todoId));
+    const data = await deleteById(Number(decodedUserId), Number(todoId));
 
     if (data === 0) {
       res
@@ -151,9 +151,9 @@ const deleteTodoById = createExpressHandler(async (req, res) => {
 
 const deleteAllTodos = createExpressHandler(async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { decodedUserId } = req.body;
 
-    const data = await deleteAll(userId);
+    const data = await deleteAll(decodedUserId);
 
     res
       .status(200)
@@ -177,10 +177,10 @@ const deleteAllTodos = createExpressHandler(async (req, res) => {
 const toggleTodoDoneStatus = createExpressHandler(async (req, res) => {
   try {
     const { todoId } = req.params;
-    const { userId } = req.body;
+    const { decodedUserId } = req.body;
 
     const isComplete = await toggleIsCompleteById(
-      Number(userId),
+      Number(decodedUserId),
       Number(todoId)
     );
 
