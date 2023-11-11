@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import passport, { use } from 'passport';
+import passport from 'passport';
 import createExpressErrorHandler from './util/expressErrorHandler';
 import ApiError from './util/apiError';
 import userRouter from './routes/user.routing';
