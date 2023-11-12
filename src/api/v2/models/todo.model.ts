@@ -86,13 +86,13 @@ async function toggleIsCompleteById(
 async function updateById(
   userId: number,
   id: number,
-  upTitle: string,
-  upDescription: string
+  newTitle: string,
+  newDescription: string
 ): Promise<number> {
   return asyncHandller(async () => {
     // Perform the update operation
     const affectedRows = await Todo.update(
-      { title: upTitle, description: upDescription },
+      { title: newTitle, description: newDescription },
       { where: { userId, id } }
     );
 
