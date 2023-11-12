@@ -68,13 +68,9 @@ function userRouter() {
     }
   );
 
-  router.route('/github').get();
-
   router
     .route('/google/callback')
     .get(passport.authenticate('google'), handleSocialLogin);
-
-  router.route('/github/callback').get(handleSocialLogin);
 
   return router;
 }
