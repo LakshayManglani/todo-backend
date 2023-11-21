@@ -9,9 +9,9 @@ Welcome to Todo Backend! This backend allows you to build APIs.
 
 Check out the live demo of Todo on Netlify: [Todo Live Demo](https://your-link) -->
 
-<!-- ## Frontend Repository
+## Frontend Repository
 
-Check out the frontend repository for this project on Github: [Todo Reopsitory](https://github.com/your-link) -->
+Check out the frontend repository for this project on Github: [Todo Frontend](https://github.com/ChiragWadhwani05/todo-frontend)
 
 ## Required OS dependencies
 
