@@ -46,7 +46,7 @@ function userRouter() {
       {
         clientID: String(process.env.GOOGLE_CLIENT_ID),
         clientSecret: String(process.env.GOOGLE_CLIENT_SECRET),
-        callbackURL: 'http://localhost:5050/api/v2/users/google/callback',
+        callbackURL: String(process.env.GOOGLE_CALL_BACK_URL),
       },
       (accessToken, refreshToken, profile, done) => {
         // Use the profile information (e.g., profile.id, profile.displayName) to create or log in the user.
